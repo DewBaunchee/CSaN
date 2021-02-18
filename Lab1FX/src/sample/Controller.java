@@ -4,6 +4,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 
 public class Controller {
@@ -21,7 +22,11 @@ public class Controller {
     private Button scanBtn;
 
     @FXML
+    private ProgressBar bar;
+
+    @FXML
     void initialize() throws Exception {
+        textArea.setText(MacScanner.scanLocalNetwork());
         scanBtn.setOnAction(e -> {
             textArea.clear();
             try {
