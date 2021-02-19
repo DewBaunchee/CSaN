@@ -74,7 +74,7 @@ public class MacScanner {
                 InetAddress address = InetAddress.getByAddress(new byte[]{subnet[0], subnet[1], subnet[2], (byte) i});
 
                 System.out.println(address);
-                if (address.isReachable(10)) {
+                if (address.isReachable(1000)) {
                     reachableAddresses.add(address.toString().substring(1));
                     System.out.println("Reachable address #" + index++
                             + ": " + reachableAddresses.get(index - 2));
@@ -114,7 +114,7 @@ public class MacScanner {
             int index = cmdAnswer.indexOf("<");
 
             return "MAC-address: " + matcher.group() + '\n' +
-                    "Name: " + cmdAnswer.substring(cmdAnswer.lastIndexOf("\n", index) + 1, index);
+                    "Name: " + cmdAnswer.substring(cmdAnswer.lastIndexOf("-", index) + 1, index).trim();
         } else {
             return getARPAnswer(addr);
         }
