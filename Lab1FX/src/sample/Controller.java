@@ -1,19 +1,11 @@
 package sample;
 
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 
 public class Controller {
-
-    @FXML
-    private ResourceBundle resources;
-
-    @FXML
-    private URL location;
 
     @FXML
     private TextArea textArea;
@@ -26,11 +18,11 @@ public class Controller {
 
     @FXML
     void initialize() throws Exception {
-        textArea.setText(MacScanner.scanLocalNetwork());
+        textArea.setText(MacScanner.scan());
         scanBtn.setOnAction(e -> {
             textArea.clear();
             try {
-                textArea.setText(MacScanner.scanLocalNetwork());
+                textArea.setText(MacScanner.scan());
             } catch (Exception exception) {
                 textArea.setText(exception.getMessage());
             }
