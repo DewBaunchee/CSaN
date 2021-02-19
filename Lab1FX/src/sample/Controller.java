@@ -5,6 +5,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextArea;
 
+import javax.crypto.Mac;
+
 public class Controller {
 
     @FXML
@@ -23,7 +25,7 @@ public class Controller {
             try {
                 textArea.setText(MacScanner.scan());
             } catch (Exception exception) {
-                textArea.setText(exception.getMessage());
+                exception.printStackTrace();
             }
         });
     }

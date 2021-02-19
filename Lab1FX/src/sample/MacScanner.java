@@ -6,6 +6,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -21,6 +22,27 @@ public class MacScanner {
                     mac[k], (k < mac.length - 1) ? "-" : ""));
         }
         return buffer.toString().toUpperCase(Locale.ROOT);
+    }
+    public class ScanIP implements Runnable {
+        private InetAddress addr;
+        private boolean isOnline;
+
+        public ScanIP(InetAddress inAddr){
+            addr = inAddr;
+        }
+
+        @Override
+        public void run() {
+            try {
+                isOnline = addr.isReachable(1000);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public InetAddress getAddr() {
+            return addr;
+        }
     }
 
     public static StringBuilder wholeAnswer;
@@ -55,12 +77,21 @@ public class MacScanner {
 
         System.out.println("Local addresses ready to scan: " + localAddresses);
         System.out.println("Starting scan...");
-        wholeAnswer.append("\n===================================================================================\n");
+        wholeAnswer.append("\n=========================================\n");
         for (InetAddress value : localAddresses) {
             wholeAnswer.append(scanLocalNetwork(value.getAddress()));
         }
         System.out.println(wholeAnswer.toString());
         return wholeAnswer.toString();
+    }
+
+    class CheckAddress implements Callable<Boolean> {
+
+        @Override
+        public Boolean call() throws Exception {
+            // возвращает имя потока, который выполняет callable таск
+            return true;
+        }
     }
 
     public static String scanLocalNetwork(byte[] subnet) throws Exception {
@@ -86,11 +117,11 @@ public class MacScanner {
                 if(wholeAnswer.indexOf(addr) > -1)  {
                     continue;
                 };
-                String cmdAnswer = getNameAndMACAnswer(addr);
+                String cmdAnswer = getARPAnswer(addr);
 
-                answer.append("IP-address: ")
-                        .append(addr)
+                answer.append("IP-address: ").append(addr)
                         .append('\n').append(cmdAnswer)
+                        .append("\nName: ").append(InetAddress.getByAddress(strToAddr(addr)).getHostAddress())
                         .append("\n----------------------------------------------------------------\n");
 
                 System.out.println(cmdAnswer);
@@ -104,6 +135,19 @@ public class MacScanner {
         return answer.toString();
     }
 
+    private static byte[] strToAddr(String addr) {
+        byte[] address = new byte[4];
+        addr = addr.trim();
+        address[0] = (byte) Integer.parseInt(addr.substring(0, addr.indexOf('.')));
+        addr = addr.substring(addr.indexOf(".") + 1);
+        address[1] = (byte) Integer.parseInt(addr.substring(0, addr.indexOf('.')));
+        addr = addr.substring(addr.indexOf(".") + 1);
+        address[2] = (byte) Integer.parseInt(addr.substring(0, addr.indexOf('.')));
+        addr = addr.substring(addr.indexOf(".") + 1);
+        address[3] = (byte) Integer.parseInt(addr);
+        return address;
+    }
+/*
     private static String getNameAndMACAnswer(String addr) {
         String command = "nbtstat -a " + addr;
         StringBuilder cmdAnswer = new StringBuilder(getCmdAnswer(command));
@@ -118,7 +162,7 @@ public class MacScanner {
         } else {
             return getARPAnswer(addr);
         }
-    }
+    }*/
 
     private static String getARPAnswer(String addr) {
         getCmdAnswer("arp refresh");
