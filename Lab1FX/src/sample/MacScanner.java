@@ -23,10 +23,12 @@ public class MacScanner {
         return buffer.toString().toUpperCase(Locale.ROOT);
     }
 
-    public static String scan() throws Exception {
-        StringBuilder answer = new StringBuilder();
+    public static StringBuilder wholeAnswer;
 
-        answer.append("Local host:\n    Name: ")
+    public static String scan() throws Exception {
+        wholeAnswer = new StringBuilder();
+
+        wholeAnswer.append("Local host:\n    Name: ")
                 .append(InetAddress.getLocalHost().getHostName())
                 .append("\n    MAC-address: ")
                 .append(macToString(NetworkInterface.getByInetAddress(InetAddress
@@ -46,21 +48,23 @@ public class MacScanner {
 
                 if(address[0] == (byte) 192 || address[1] == (byte) 168) {
                     localAddresses.add(ia);
-                    answer.append(ia.getHostAddress()).append("\n              ");
+                    wholeAnswer.append(ia.getHostAddress()).append("\n              ");
                 }
             }
         }
 
+        System.out.println("Local addresses ready to scan: " + localAddresses);
         System.out.println("Starting scan...");
-        answer.append("\n===================================================================================");
+        wholeAnswer.append("\n===================================================================================\n");
         for (InetAddress value : localAddresses) {
-            answer.append(scanLocalNetwork(value.getAddress()));
+            wholeAnswer.append(scanLocalNetwork(value.getAddress()));
         }
-        return answer.toString();
+        System.out.println(wholeAnswer.toString());
+        return wholeAnswer.toString();
     }
 
     public static String scanLocalNetwork(byte[] subnet) throws Exception {
-        StringBuilder answer = new StringBuilder("Subnet " + (0xFF & subnet[0]) + "." + (0xFF & subnet[1]) + "." + (0xFF & subnet[2]) + ":");
+        StringBuilder answer = new StringBuilder("Subnet " + (0xFF & subnet[0]) + "." + (0xFF & subnet[1]) + "." + (0xFF & subnet[2]) + ":\n");
         System.out.println("Subnet " + (0xFF & subnet[0]) + "." + (0xFF & subnet[1]) + "." + (0xFF & subnet[2]) + ":");
         try {
             int index = 1;
@@ -79,7 +83,9 @@ public class MacScanner {
 
             System.out.println("Getting MAC-addresses...");
             for (String addr : reachableAddresses) {
-                if(answer.indexOf(addr) > -1) continue;
+                if(wholeAnswer.indexOf(addr) > -1)  {
+                    continue;
+                };
                 String cmdAnswer = getNameAndMACAnswer(addr);
 
                 answer.append("IP-address: ")
@@ -115,6 +121,7 @@ public class MacScanner {
     }
 
     private static String getARPAnswer(String addr) {
+        getCmdAnswer("arp refresh");
         String command = "arp -a " + addr;
         String answer = getCmdAnswer(command);
         Matcher matcher = Pattern.compile(MACRegex).matcher(answer);

@@ -17,8 +17,7 @@ public class Controller {
     private ProgressBar bar;
 
     @FXML
-    void initialize() throws Exception {
-        textArea.setText(MacScanner.scan());
+    void initialize() {
         scanBtn.setOnAction(e -> {
             textArea.clear();
             try {
