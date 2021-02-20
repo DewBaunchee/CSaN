@@ -6,6 +6,10 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -20,13 +24,16 @@ public class MacScanner {
             buffer.append(String.format("%02X%s",
                     mac[k], (k < mac.length - 1) ? "-" : ""));
         }
-        return buffer.toString().toUpperCase(Locale.ROOT);
+        return buffer.toString().toLowerCase(Locale.ROOT);
     }
 
     public static StringBuilder wholeAnswer;
 
+    public static byte[] mask = {(byte) 255, (byte) 255, (byte) 255, 0};
+
     public static String scan() throws Exception {
         wholeAnswer = new StringBuilder();
+        byte[] localAddress = InetAddress.getLocalHost().getAddress();
 
         wholeAnswer.append("Local host:\n    Name: ")
                 .append(InetAddress.getLocalHost().getHostName())
@@ -40,15 +47,16 @@ public class MacScanner {
 
         while(allNI.hasMoreElements())
         {
-            Enumeration<InetAddress> addresses = allNI.nextElement().getInetAddresses();
+            NetworkInterface ni = allNI.nextElement();
+            Enumeration<InetAddress> addresses = ni.getInetAddresses();
             while (addresses.hasMoreElements())
             {
                 InetAddress ia = addresses.nextElement();
                 byte[] address = ia.getAddress();
 
-                if(address[0] == (byte) 192 || address[1] == (byte) 168) {
+                if(address[0] == localAddress[0] || address[1] ==  localAddress[1]) {
                     localAddresses.add(ia);
-                    wholeAnswer.append(ia.getHostAddress()).append("\n              ");
+                    wholeAnswer.append(ia.getHostAddress()).append("\n                  ");
                 }
             }
         }
@@ -60,64 +68,110 @@ public class MacScanner {
             wholeAnswer.append(scanLocalNetwork(value.getAddress()));
         }
         System.out.println(wholeAnswer.toString());
+        System.out.println("Success.");
         return wholeAnswer.toString();
+    }
+
+    public static List<String> findInterfaces() throws UnknownHostException, SocketException {
+        byte[] localAddress = InetAddress.getLocalHost().getAddress();
+
+        Enumeration<NetworkInterface> allNI = NetworkInterface.getNetworkInterfaces();
+        List<String> localAddresses = new ArrayList<>();
+
+        while(allNI.hasMoreElements())
+        {
+            NetworkInterface ni = allNI.nextElement();
+            Enumeration<InetAddress> addresses = ni.getInetAddresses();
+            while (addresses.hasMoreElements())
+            {
+                InetAddress ia = addresses.nextElement();
+                byte[] address = ia.getAddress();
+
+                if(address[0] == localAddress[0] || address[1] ==  localAddress[1]) {
+                    localAddresses.add((0xFF & address[0]) + "." + (0xFF & address[1])
+                            + "." + (0xFF & address[2]));
+                }
+            }
+        }
+
+        return localAddresses;
+    }
+
+    static class ScanIP implements Callable<String> {
+
+        private final byte[] addr;
+
+        public ScanIP(byte[] inAddr) {
+            addr = inAddr;
+        }
+
+        @Override
+        public String call() throws IOException {
+            if(InetAddress.getByAddress(addr).isReachable(1000)) {
+                return (0xFF & addr[0]) + "." + (0xFF & addr[1]) + "." + (0xFF & addr[2]) + "." + (0xFF & addr[3]);
+            } else {
+                return null;
+            }
+        }
     }
 
     public static String scanLocalNetwork(byte[] subnet) throws Exception {
         StringBuilder answer = new StringBuilder("Subnet " + (0xFF & subnet[0]) + "." + (0xFF & subnet[1]) + "." + (0xFF & subnet[2]) + ":\n");
         System.out.println("Subnet " + (0xFF & subnet[0]) + "." + (0xFF & subnet[1]) + "." + (0xFF & subnet[2]) + ":");
         try {
-            int index = 1;
-            ArrayList<String> reachableAddresses = new ArrayList<>();
-            System.out.println("Scanning reachable addresses...");
-            for (int i = 1; i < 255; i++) {
+            ExecutorService executor = Executors.newFixedThreadPool(10);
+            ArrayList<Future<String>> reachableAddresses = new ArrayList<>();
+            System.out.println("   Scanning reachable addresses...");
+            for (int i = 1; i <= (0xFF & mask[3] - 2); i++) {
                 InetAddress address = InetAddress.getByAddress(new byte[]{subnet[0], subnet[1], subnet[2], (byte) i});
+             //   System.out.println(address);
 
-                System.out.println(address);
-                if (address.isReachable(10)) {
-                    reachableAddresses.add(address.toString().substring(1));
-                    System.out.println("Reachable address #" + index++
-                            + ": " + reachableAddresses.get(index - 2));
-                }
+                Callable<String> localScan = new ScanIP(address.getAddress());
+                reachableAddresses.add(executor.submit(localScan));
             }
 
-            System.out.println("Getting MAC-addresses...");
-            for (String addr : reachableAddresses) {
-                if(wholeAnswer.indexOf(addr) > -1)  {
+            System.out.println("   Getting MAC-addresses...");
+            for (Future<String> future : reachableAddresses) {
+                String address = future.get();
+                if (address == null) continue;
+                if(wholeAnswer != null && wholeAnswer.indexOf(address) > -1)  {
                     continue;
                 };
-                String cmdAnswer = getNameAndMACAnswer(addr);
+                System.out.println("      Getting answer from " + address + "...");
+                String cmdAnswer = getARPAnswer(address);
+                if(cmdAnswer == null) {
+                    cmdAnswer = "MAC-address: " + macToString(NetworkInterface
+                            .getByInetAddress(InetAddress.getByAddress(strToAddr(address, 4))).getHardwareAddress());
+                }
 
-                answer.append("IP-address: ")
-                        .append(addr)
-                        .append('\n').append(cmdAnswer)
+                answer.append("   IP-address: ").append(address)
+                        .append("\n   ").append(cmdAnswer)
+                        .append("\n   Name: ").append(InetAddress.getByAddress(strToAddr(address, 4)).getCanonicalHostName())
                         .append("\n----------------------------------------------------------------\n");
 
-                System.out.println(cmdAnswer);
+                System.out.println("      " + cmdAnswer);
             }
-            System.out.println("Success.");
-        } catch (UnknownHostException | SocketException e) {
+            executor.shutdown();
+        } catch (UnknownHostException e) {
             throw new Exception("Unknown host error.");
         }
 
-        System.out.println(answer);
+        if(answer.indexOf("MAC") == -1) {
+            answer.append("   No nodes");
+        }
+        System.out.println("Local success.");
         return answer.toString();
     }
 
-    private static String getNameAndMACAnswer(String addr) {
-        String command = "nbtstat -a " + addr;
-        StringBuilder cmdAnswer = new StringBuilder(getCmdAnswer(command));
-
-        Matcher matcher = Pattern.compile(MACRegex).matcher(cmdAnswer.toString());
-
-        if(matcher.find()) {
-            int index = cmdAnswer.indexOf("<");
-
-            return "MAC-address: " + matcher.group() + '\n' +
-                    "Name: " + cmdAnswer.substring(cmdAnswer.lastIndexOf("\n", index) + 1, index);
-        } else {
-            return getARPAnswer(addr);
+    public static byte[] strToAddr(String addr, int count) {
+        byte[] answer = new byte[count];
+        addr = addr + ".";
+        for(int i = 0; i < count; i++) {
+            answer[i] = (byte) Integer.parseInt(addr.substring(0, addr.indexOf('.')));
+            addr = addr.substring(addr.indexOf('.') + 1);
         }
+
+        return answer;
     }
 
     private static String getARPAnswer(String addr) {
