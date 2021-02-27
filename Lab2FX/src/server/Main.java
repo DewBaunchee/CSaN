@@ -6,6 +6,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Main extends Application {
 
     @Override
@@ -15,6 +18,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.setMinWidth(600);
         primaryStage.setMinHeight(400);
+        primaryStage.setOnCloseRequest(ServerController.closeEvent);
         primaryStage.show();
     }
 

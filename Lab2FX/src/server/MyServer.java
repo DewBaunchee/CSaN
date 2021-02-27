@@ -6,16 +6,16 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class MyServer extends Thread {
-    private int port;
-    private BufferedWriter logStream;
-    private ArrayList<ConnectedSocket> connectedClients;
+    private final int port;
+    private final BufferedWriter logStream;
+    private final ArrayList<ConnectedSocket> connectedClients;
     private ServerSocket serverSocket;
-    private SocketListener listener;
 
-    public MyServer(int inPort, OutputStream inLog) throws IOException {
-        if (isPortCorrect(inPort)) {
+    public MyServer(int inPort, BufferedWriter toLogWriter) throws IOException {
+        logStream = toLogWriter;
+
+        if (isPortNotBind(inPort)) {
             port = inPort;
-            logStream = null; //logStream = new BufferedWriter(new OutputStreamWriter(inLog));
             connectedClients = new ArrayList<>();
             log("Server initialized.");
             start();
@@ -25,7 +25,7 @@ public class MyServer extends Thread {
         }
     }
 
-    public static boolean isPortCorrect(int inPort) {
+    public static boolean isPortNotBind(int inPort) {
         try {
             ServerSocket checkSocket = new ServerSocket(inPort);
             checkSocket.close();
@@ -36,62 +36,68 @@ public class MyServer extends Thread {
     }
 
     public void log(String message) {
-        if (logStream == null) {
-            System.out.println(message);
-        } else {
+        System.out.println(message);
+
+        if (logStream != null) {
             try {
                 logStream.write(message + "\n");
                 logStream.flush();
             } catch (IOException e) {
                 System.out.println(e.getMessage());
+                e.printStackTrace();
             }
         }
+    }
+
+    public boolean isOpened() {
+        return !serverSocket.isClosed();
     }
 
     @Override
     public void run() {
-        log("Starting...");
+        log("Starting server...");
         try {
             serverSocket = new ServerSocket(port);
-            listener = new SocketListener();
-            log("Started. Starting listening for clients...");
-            startListening();
+            log("Server started.");
+
         } catch (IOException e) {
             log("Error during starting: " + e.getMessage());
         }
-    }
 
-    private void startListening() throws IOException {
-        listener.start();
-        log("Listener started.");
-    }
-
-    public void shutdown() throws IOException {
-        listener.interrupt();
-        serverSocket.close();
-        for (ConnectedSocket client : connectedClients) {
-            client.send("Server stopped.");
-            client.interrupt();
-        }
-        log("Server stopped.");
-    }
-
-    class SocketListener extends Thread {
-        @Override
-        public void run() {
-            while (!isInterrupted()) {
-                try {
-                    Socket socket = serverSocket.accept();
-                    connectedClients.add(new ConnectedSocket(socket));
-                } catch (IOException e) {
-                    log(e.getMessage());
-                }
+        log("Starting listening for clients...");
+        while (!isInterrupted()) {
+            try {
+                Socket socket = serverSocket.accept();
+                connectedClients.add(new ConnectedSocket(socket));
+                log("   Socket connected: " + socket.toString());
+            } catch (IOException e) {
+                log(e.getMessage());
+                e.printStackTrace();
             }
         }
     }
 
+    public void shutdown() throws IOException {
+        for (ConnectedSocket client : connectedClients) {
+            if (client.isAlive()) {
+                client.send("Server stopped.");
+                client.interrupt();
+            }
+        }
+        log("Server stopped.");
+        serverSocket.close();
+        logStream.close();
+        interrupt();
+    }
+
+    private void disconnectSocket(ConnectedSocket socket) {
+        connectedClients.remove(socket);
+        socket.closeSocket();
+        log("   Socket disconnected: " + socket.toString());
+    }
+
     class ConnectedSocket extends Thread {
-        private Socket socket;
+        private final Socket socket;
         private final BufferedReader fromClient;
         private final BufferedWriter toClient;
 
@@ -105,16 +111,39 @@ public class MyServer extends Thread {
         @Override
         public void run() {
             msgWaiting();
+            closeSocket();
+        }
+
+        private void closeSocket() {
+            if(socket != null && socket.isConnected()) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    log("Error during closing.");
+                    e.printStackTrace();
+                }
+            }
         }
 
         private void msgWaiting() {
-            while (!isInterrupted()) {
-                try {
+            try {
+                while (!isInterrupted()) {
                     sendToAll(fromClient.readLine());
-                } catch (IOException e) {
+                }
+            } catch (IOException e) {
+                log(e.getMessage());
+                e.printStackTrace();
+                disconnectSocket(this);
+                try {
+                    fromClient.close();
+                    toClient.close();
+                    socket.close();
+                } catch (IOException ioException) {
                     log(e.getMessage());
+                    e.printStackTrace();
                 }
             }
+            interrupt();
         }
 
         public void sendToAll(String message) {
@@ -123,11 +152,15 @@ public class MyServer extends Thread {
 
         public void send(String message) {
             try {
-                log(message);
-                toClient.write(message + "\n");
-                toClient.flush();
+                if(socket.isConnected()) {
+                    log(message);
+                    toClient.write(message + "\n");
+                    toClient.flush();
+                }
             } catch (IOException e) {
                 log(e.getMessage());
+                e.printStackTrace();
+                disconnectSocket(this);
             }
         }
     }

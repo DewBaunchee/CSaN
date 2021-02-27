@@ -50,9 +50,9 @@
    <center>
       <AnchorPane prefHeight="348.0" prefWidth="729.0" style="-fx-border-color: #000;" BorderPane.alignment="CENTER">
          <children>
-            <TextArea fx:id="logArea" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" promptText="Log" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <TextArea fx:id="logArea" editable="false" layoutX="14.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" promptText="Log" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <font>
-                  <Font name="Courier New" size="20.0" />
+                  <Font name="Courier New" size="14.0" />
                </font>
             </TextArea>
          </children>
