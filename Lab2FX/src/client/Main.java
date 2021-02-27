@@ -1,4 +1,4 @@
-package sample;
+package client;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -10,11 +10,12 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("sample.fxml"));
-        primaryStage.setTitle("Local network scanner");
+        Parent root = FXMLLoader.load(getClass().getResource("client.fxml"));
+        primaryStage.setTitle("Messenger");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.setMinWidth(650);
         primaryStage.setMinHeight(450);
+        primaryStage.setOnCloseRequest(ClientController.onCloseRequest);
         primaryStage.show();
     }
 
