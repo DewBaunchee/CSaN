@@ -29,7 +29,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="disconnectBtn" layoutX="489.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="105.0" text="Disconnect" visible="false">
+            <Button fx:id="disconnectBtn" layoutX="489.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="105.0" text="Disconnect" visible="false" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="16.0" />
                </font>
@@ -43,7 +43,10 @@
    <center>
       <AnchorPane prefHeight="103.0" prefWidth="600.0" style="-fx-border-color: #000;" BorderPane.alignment="CENTER">
          <children>
-            <TextArea fx:id="messagesArea" layoutX="6.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+            <TextArea fx:id="messagesArea" editable="false" layoutX="6.0" layoutY="14.0" prefHeight="200.0" prefWidth="200.0" promptText="Messages" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+               <font>
+                  <Font name="Courier New" size="14.0" />
+               </font></TextArea>
          </children>
       </AnchorPane>
    </center>
