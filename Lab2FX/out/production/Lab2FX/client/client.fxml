@@ -10,10 +10,10 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ClientController">
    <bottom>
-      <AnchorPane prefHeight="53.0" prefWidth="600.0" style="-fx-background-color: #96FF88; -fx-border-color: #000;" stylesheets="@../styles/style.css" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="53.0" prefWidth="600.0" style="-fx-background-color: #96FF88; -fx-border-color: #000;" stylesheets="@style.css" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="messageField" layoutX="7.0" layoutY="7.0" prefHeight="41.0" prefWidth="410.0" AnchorPane.bottomAnchor="6.0" AnchorPane.leftAnchor="6.0" AnchorPane.rightAnchor="183.0" AnchorPane.topAnchor="6.0" />
-            <Button fx:id="connectBtn" layoutX="490.0" layoutY="7.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="105.0" text="Connect" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+            <Button fx:id="connectBtn" layoutX="490.0" layoutY="7.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="105.0" stylesheets="@style.css" text="Connect" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="16.0" />
                </font>
@@ -21,7 +21,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="sendBtn" layoutX="388.0" layoutY="13.0" mnemonicParsing="false" text="Send" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="115.0" AnchorPane.topAnchor="5.0">
+            <Button fx:id="sendBtn" layoutX="388.0" layoutY="13.0" mnemonicParsing="false" styleClass="button" stylesheets="@style.css" text="Send" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="115.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="16.0" />
                </font>
@@ -29,7 +29,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <Button fx:id="disconnectBtn" layoutX="489.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="105.0" text="Disconnect" visible="false" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+            <Button fx:id="disconnectBtn" layoutX="489.0" layoutY="6.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="105.0" styleClass="button" stylesheets="@style.css" text="Disconnect" visible="false" AnchorPane.bottomAnchor="6.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <font>
                   <Font size="16.0" />
                </font>

@@ -53,14 +53,18 @@ public class ClientController {
 
         connectBtn.setOnAction(actionEvent -> {
             String ip = dialog("Question", "Enter server name:");
+            if(ip == null) return;
 
             String port = dialog("Question", "Enter server port:");
+            if(port == null) return;
+
             if (MyServer.isPortNotBind(Integer.parseInt(port))) {
                 alert("Error", "Illegal port.", Alert.AlertType.ERROR);
                 return;
             }
 
             String name = dialog("Question", "Enter name:");
+            if(name == null) return;
             if (!name.trim().matches("([a-zA-Z_][a-zA-Z_0-9]{2,10})")) {
                 alert("Error", "Illegal name.", Alert.AlertType.ERROR);
                 return;
