@@ -8,6 +8,9 @@ import javafx.stage.WindowEvent;
 
 import java.io.*;
 import java.util.Optional;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.Exchanger;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class ServerController {
 
@@ -41,11 +44,7 @@ public class ServerController {
                 Optional<ButtonType> result = alert.showAndWait();
 
                 if (result.isPresent() && result.get() == ButtonType.OK) {
-                    try {
-                        server.shutdown();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                    server.shutdown();
                     listener.interrupt();
                 } else {
                     windowEvent.consume();
@@ -56,6 +55,7 @@ public class ServerController {
         startBtn.setOnAction(actionEvent -> {
             if(portField.getText().length() > 0) {
                 try {
+                    /*
                     PipedInputStream fromServer = new PipedInputStream();
                     BufferedReader br = new BufferedReader(new InputStreamReader(fromServer));
 
@@ -63,9 +63,10 @@ public class ServerController {
                     BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(toLog));
 
                     toLog.connect(fromServer);
-
-                    server = new MyServer(Integer.parseInt(portField.getText()), bf);
-                    listener = new ServerListener(br);
+                    */
+                    BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<>(10);
+                    server = new MyServer(Integer.parseInt(portField.getText()), blockingQueue);
+                    listener = new ServerListener(blockingQueue);
 
                     statusEnabled();
                 } catch (IOException e) {
@@ -78,12 +79,9 @@ public class ServerController {
 
         stopBtn.setOnAction(actionEvent -> {
             if(server != null && server.isOpened()) {
-                try {
-                    server.shutdown();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
+                server.shutdown();
                 statusDisabled();
+                server = null;
             }
         });
 
@@ -104,6 +102,10 @@ public class ServerController {
         statusLabel.setTextFill(Color.RED);
     }
 
+    private void appendLog(String message) {
+        logArea.appendText(message);
+    }
+
     public void alert(String title, String content, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setContentText(content);
@@ -113,9 +115,9 @@ public class ServerController {
     }
 
     class ServerListener extends Thread {
-        private final BufferedReader fromServer; // log read <- write server
+        private final BlockingQueue<String> fromServer; // log read <- write server
 
-        public ServerListener(BufferedReader fromS) {
+        public ServerListener(BlockingQueue<String> fromS) {
             fromServer = fromS;
             start();
         }
@@ -124,14 +126,15 @@ public class ServerController {
         public void run() {
             try {
                 while(!isInterrupted()) {
-                    String message = fromServer.readLine();
+                    String message = fromServer.take();
+
                     if(message == null) {
                         interrupt();
                     } else {
-                        logArea.appendText(message + "\n");
+                        appendLog(message + "\n");
                     }
                 }
-            } catch (IOException e) {
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             System.out.println("Server listener closed.");

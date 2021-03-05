@@ -44,15 +44,20 @@ public class MyClient extends Thread {
         System.out.println("    Message writer started.");
         System.out.println("Client started.");
         while (!isInterrupted()) ;
+
+        disconnect();
     }
 
-    public void disconnect() throws IOException {
-        System.out.println("Closing...");
-        fromServer.interrupt();
-        toServer.interrupt();
-        clientSocket.close();
-        System.out.println("Closed.");
-        interrupt();
+    public void disconnect() {
+        try {
+            System.out.println("Closing...");
+            fromServer.interrupt();
+            toServer.interrupt();
+            clientSocket.close();
+            System.out.println("Closed.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void send(String message) {
@@ -115,7 +120,7 @@ public class MyClient extends Thread {
                 toS.flush();
             } catch (IOException e) {
                 e.printStackTrace();
-                interrupt();
+                    disconnect();
             }
         }
     }

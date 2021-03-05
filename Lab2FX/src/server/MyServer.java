@@ -4,23 +4,24 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
 
 public class MyServer extends Thread {
     private final int port;
-    private final BufferedWriter logStream;
     private final ArrayList<ConnectedSocket> connectedClients;
+    private final LogWriter logWriter;
     private ServerSocket serverSocket;
 
-    public MyServer(int inPort, BufferedWriter toLogWriter) throws IOException {
-        logStream = toLogWriter;
+    public MyServer(int inPort, BlockingQueue<String> toLogExchange) throws IOException {
+        logWriter = new LogWriter(toLogExchange);
 
         if (isPortNotBind(inPort)) {
             port = inPort;
             connectedClients = new ArrayList<>();
-            log("Server initialized.");
+            logWriter.log("Server initialized.");
             start();
         } else {
-            log("Illegal port");
+            logWriter.log("Illegal port");
             throw new IOException("Illegal port");
         }
     }
@@ -35,71 +36,104 @@ public class MyServer extends Thread {
         }
     }
 
-    public void log(String message) {
-        System.out.println(message);
-
-        if (logStream != null) {
-            try {
-                logStream.write(message + "\n");
-                logStream.flush();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
-                e.printStackTrace();
-            }
-        }
-    }
-
     public boolean isOpened() {
         return !serverSocket.isClosed();
     }
 
     @Override
     public void run() {
-        log("Starting server...");
+        logWriter.log("Starting server...");
         try {
             serverSocket = new ServerSocket(port);
-            log("Server started.");
+            logWriter.log("Server started.");
 
         } catch (IOException e) {
-            log("Error during starting: " + e.getMessage());
+            logWriter.log("Error during starting: " + e.getMessage());
+            return;
         }
 
-        log("Starting listening for clients...");
+        logWriter.log("Starting listening for clients...");
         while (!isInterrupted()) {
             try {
                 Socket socket = serverSocket.accept();
                 connectedClients.add(new ConnectedSocket(socket));
 
-                sendToAll("   Socket connected: " + socket.toString());
+                sendToAll("Socket connected: " + socket.toString());
             } catch (IOException e) {
-                log(e.getMessage());
+                logWriter.log("MyServer.run:\n" + e.getMessage());
                 e.printStackTrace();
+                shutdown();
             }
         }
     }
 
-    public void shutdown() throws IOException {
-        for (ConnectedSocket client : connectedClients) {
-            if (client.isAlive()) {
-                client.send("Server stopped.");
-                client.interrupt();
+    public void shutdown() {
+        try {
+            for (ConnectedSocket client : connectedClients) {
+                if (client.isAlive()) {
+                    client.send("Server stopped.");
+                    client.interrupt();
+                }
             }
+            logWriter.log("Server stopped.");
+            serverSocket.close();
+            logWriter.interrupt();
+        } catch (IOException e) {
+            System.out.println("MyServer.shutdown:");
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
-        log("Server stopped.");
-        serverSocket.close();
-        logStream.close();
         interrupt();
     }
 
     private void disconnectSocket(ConnectedSocket socket) {
         connectedClients.remove(socket);
+        sendToAll("Socket disconnected: " + socket.toString());
         socket.closeSocket();
-        log("   Socket disconnected: " + socket.toString());
     }
 
     public void sendToAll(String message) {
-        log(message);
-        for (ConnectedSocket client : connectedClients) client.send(message);
+        logWriter.log(message);
+        for (int i = 0; i < connectedClients.size(); i++) {
+            ConnectedSocket client = connectedClients.get(i);
+            try {
+                client.send(message);
+            } catch (IOException e) {
+                logWriter.log("MyServer.sendToAll:\n" + e.getMessage());
+                e.printStackTrace();
+                disconnectSocket(client);
+                i--;
+            }
+        }
+    }
+    
+    class LogWriter extends Thread {
+        private final BlockingQueue<String> logQueue;
+        
+        public LogWriter(BlockingQueue<String> queue) {
+            logQueue = queue;
+            start();
+        }
+        
+        @Override
+        public void run() {
+            while (!isInterrupted());
+            close();
+        }
+
+        public void log(String message) {
+            System.out.println(message);
+                try {
+                    logQueue.put(message);
+                } catch (InterruptedException e) {
+                    System.out.println(e.getMessage());
+                    e.printStackTrace();
+                }
+        }
+        
+        public void close() {
+            System.out.println("Log writer closed.");
+        }
     }
 
     class ConnectedSocket extends Thread {
@@ -117,51 +151,43 @@ public class MyServer extends Thread {
         @Override
         public void run() {
             msgWaiting();
-            closeSocket();
-        }
-
-        private void closeSocket() {
-            if(socket != null && socket.isConnected()) {
-                try {
-                    socket.close();
-                } catch (IOException e) {
-                    log("Error during closing.");
-                    e.printStackTrace();
-                }
-            }
+            disconnectSocket(this);
         }
 
         private void msgWaiting() {
             try {
                 while (!isInterrupted()) {
-                    sendToAll(fromClient.readLine());
+                    String message = fromClient.readLine();
+
+                    if(message == null) {
+                        interrupt();
+                    } else {
+                        sendToAll(message);
+                    }
                 }
             } catch (IOException e) {
-                log(e.getMessage());
+                System.out.println("ConnectedSocket.run:\n" + e.getMessage());
                 e.printStackTrace();
-                disconnectSocket(this);
+            }
+        }
+
+        private void closeSocket() {
+            if (socket != null && socket.isConnected()) {
                 try {
                     fromClient.close();
                     toClient.close();
                     socket.close();
-                } catch (IOException ioException) {
-                    log(e.getMessage());
+                } catch (IOException e) {
+                    System.out.println("Error during closing.");
                     e.printStackTrace();
                 }
             }
-            interrupt();
         }
 
-        public void send(String message) {
-            try {
-                if(socket.isConnected()) {
-                    toClient.write(message + "\n");
-                    toClient.flush();
-                }
-            } catch (IOException e) {
-                log(e.getMessage());
-                e.printStackTrace();
-                disconnectSocket(this);
+        public void send(String message) throws IOException {
+            if (socket.isConnected()) {
+                toClient.write(message + "\n");
+                toClient.flush();
             }
         }
     }

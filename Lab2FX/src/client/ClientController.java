@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.stage.WindowEvent;
-import server.MyServer;
 
 import java.io.*;
 import java.util.Optional;
@@ -29,39 +28,34 @@ public class ClientController {
 
     public static EventHandler<WindowEvent> onCloseRequest;
     private static MyClient client;
-    private static ClientListener listener;
+    private static ServerListener listener;
 
     @FXML
     void initialize() {
         onCloseRequest = windowEvent -> {
-            if(listener != null) {
-                try {
-                    listener.interrupt();
-                    client.disconnect();
-                } catch (IOException e) {
-                    System.out.println(e.getMessage());
-                }
+            if (listener != null) {
+                listener.interrupt();
+                client.interrupt();
+
                 listener = null;
                 client = null;
             }
         };
 
         sendBtn.setOnAction(actionEvent -> {
-            if(client != null && client.isAlive() && messageField.getText().length() > 0) {
-                client.send(messageField.getText());
-            }
+            send(messageField.getText());
             messageField.clear();
         });
 
         connectBtn.setOnAction(actionEvent -> {
             String ip = dialog("Question", "Enter server name:");
-            if(ip == null) return;
+            if (ip == null) return;
 
             String port = dialog("Question", "Enter server port:");
-            if(port == null) return;
+            if (port == null) return;
 
             String name = dialog("Question", "Enter name:");
-            if(name == null) return;
+            if (name == null) return;
             if (!name.trim().matches("([a-zA-Z_][a-zA-Z_0-9]{2,10})")) {
                 alert("Error", "Illegal name.", Alert.AlertType.ERROR);
                 return;
@@ -70,7 +64,7 @@ public class ClientController {
             try {
                 PipedInputStream fromC = new PipedInputStream();
                 client = new MyClient(ip, Integer.parseInt(port), name.trim(), fromC);
-                listener = new ClientListener(new BufferedReader(new InputStreamReader(fromC)));
+                listener = new ServerListener(new BufferedReader(new InputStreamReader(fromC)));
 
                 disconnectBtn.setVisible(true);
             } catch (IOException e) {
@@ -79,31 +73,32 @@ public class ClientController {
         });
 
         disconnectBtn.setOnAction(actionEvent -> {
-            try {
-                listener.interrupt();
-                client.disconnect();
-            } catch (IOException e) {
-                alert("Error", e.getMessage(), Alert.AlertType.ERROR);
-                System.out.println(e.getMessage());
-            }
+            listener.interrupt();
+            client.interrupt();
+
             listener = null;
             client = null;
             disconnectBtn.setVisible(false);
         });
 
         messageField.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER) {
-                if(client != null && client.isAlive() && messageField.getText().length() > 0) {
-                    client.send(messageField.getText());
-                }
+            if (keyEvent.getCode() == KeyCode.ENTER) {
+                send(messageField.getText());
                 messageField.clear();
             }
         });
+
         messageField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue.length() > 255) {
                 messageField.textProperty().set(oldValue);
             }
         });
+    }
+
+    public void send(String message) {
+        if (client != null && client.isAlive() && messageField.getText().length() > 0) {
+            client.send(message);
+        }
     }
 
     public String dialog(String title, String question) {
@@ -124,25 +119,35 @@ public class ClientController {
         alert.showAndWait();
     }
 
-    class ClientListener extends Thread {
-        private final BufferedReader fromClient; // User read <- write client
+    class ServerListener extends Thread {
+        private final BufferedReader fromServer; // User read <- write client
 
-        public ClientListener(BufferedReader fromC) {
-            fromClient = fromC;
+        public ServerListener(BufferedReader fromC) {
+            fromServer = fromC;
             start();
+        }
+
+        public void close() {
+            try {
+                fromServer.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void run() {
             try {
-                while(!isInterrupted()) {
-                    String message = fromClient.readLine();
+                while (!isInterrupted()) {
+                    String message = fromServer.readLine();
                     messagesArea.appendText(message + "\n");
                 }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
+            close();
         }
     }
 }

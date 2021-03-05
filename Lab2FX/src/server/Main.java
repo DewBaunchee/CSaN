@@ -17,7 +17,7 @@ public class Main extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("server.fxml"));
         primaryStage.setTitle("Messenger server");
         primaryStage.setScene(new Scene(root, 600, 400));
-        primaryStage.getIcons().add(new Image("server/server.ico"));
+        primaryStage.getIcons().add(new Image("server/server.png"));
         primaryStage.setMinWidth(650);
         primaryStage.setMinHeight(450);
         primaryStage.setOnCloseRequest(ServerController.closeEvent);
