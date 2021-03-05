@@ -69,7 +69,8 @@ public class MyServer extends Thread {
             try {
                 Socket socket = serverSocket.accept();
                 connectedClients.add(new ConnectedSocket(socket));
-                log("   Socket connected: " + socket.toString());
+
+                sendToAll("   Socket connected: " + socket.toString());
             } catch (IOException e) {
                 log(e.getMessage());
                 e.printStackTrace();
@@ -94,6 +95,11 @@ public class MyServer extends Thread {
         connectedClients.remove(socket);
         socket.closeSocket();
         log("   Socket disconnected: " + socket.toString());
+    }
+
+    public void sendToAll(String message) {
+        log(message);
+        for (ConnectedSocket client : connectedClients) client.send(message);
     }
 
     class ConnectedSocket extends Thread {
@@ -146,14 +152,9 @@ public class MyServer extends Thread {
             interrupt();
         }
 
-        public void sendToAll(String message) {
-            for (ConnectedSocket client : connectedClients) client.send(message);
-        }
-
         public void send(String message) {
             try {
                 if(socket.isConnected()) {
-                    log(message);
                     toClient.write(message + "\n");
                     toClient.flush();
                 }

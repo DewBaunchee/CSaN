@@ -45,8 +45,8 @@ public class ServerController {
                         server.shutdown();
                     } catch (IOException e) {
                         e.printStackTrace();
-                        listener.interrupt();
                     }
+                    listener.interrupt();
                 } else {
                     windowEvent.consume();
                 }

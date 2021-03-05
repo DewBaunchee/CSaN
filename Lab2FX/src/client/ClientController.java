@@ -41,6 +41,8 @@ public class ClientController {
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
                 }
+                listener = null;
+                client = null;
             }
         };
 
@@ -84,6 +86,8 @@ public class ClientController {
                 alert("Error", e.getMessage(), Alert.AlertType.ERROR);
                 System.out.println(e.getMessage());
             }
+            listener = null;
+            client = null;
             disconnectBtn.setVisible(false);
         });
 
