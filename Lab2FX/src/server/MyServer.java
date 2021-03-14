@@ -1,9 +1,10 @@
 package server;
 
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.concurrent.BlockingQueue;
 
 public class MyServer extends Thread {
@@ -52,19 +53,47 @@ public class MyServer extends Thread {
             return;
         }
 
+        try {
+            logWriter.log("Name: " + InetAddress.getLocalHost().getHostName());
+            logWriter.log("Port: " + port);
+            byte[] localIP = InetAddress.getLocalHost().getAddress();
+            StringBuilder sb = new StringBuilder("Server-IP:");
+            Enumeration<NetworkInterface> allNI = NetworkInterface.getNetworkInterfaces();
+
+            while(allNI.hasMoreElements())
+            {
+                NetworkInterface ni = allNI.nextElement();
+                Enumeration<InetAddress> addresses = ni.getInetAddresses();
+                while (addresses.hasMoreElements())
+                {
+                    InetAddress ia = addresses.nextElement();
+                    byte[] address = ia.getAddress();
+
+                    if(address[0] == localIP[0] || address[1] ==  localIP[1]) {
+                        sb.append(" ").append(ia.getHostAddress());
+                    }
+                }
+            }
+
+            logWriter.log(sb.toString());
+        } catch (UnknownHostException | SocketException e) {
+            logWriter.log(e.getMessage());
+            e.printStackTrace();
+        }
+
         logWriter.log("Starting listening for clients...");
-        while (!isInterrupted()) {
             try {
+                while (!isInterrupted()) {
                 Socket socket = serverSocket.accept();
                 connectedClients.add(new ConnectedSocket(socket));
 
                 sendToAll("Socket connected: " + socket.toString());
-            } catch (IOException e) {
-                logWriter.log("MyServer.run:\n" + e.getMessage());
-                e.printStackTrace();
-                shutdown();
             }
+        } catch (IOException e) {
+            logWriter.log("MyServer.run:\n" + e.getMessage());
+            e.printStackTrace();
         }
+        shutdown();
     }
 
     public void shutdown() {
@@ -152,6 +181,7 @@ public class MyServer extends Thread {
         public void run() {
             msgWaiting();
             disconnectSocket(this);
+            closeSocket();
         }
 
         private void msgWaiting() {
@@ -174,13 +204,18 @@ public class MyServer extends Thread {
         private void closeSocket() {
             if (socket != null && socket.isConnected()) {
                 try {
-                    fromClient.close();
-                    toClient.close();
                     socket.close();
                 } catch (IOException e) {
                     System.out.println("Error during closing.");
                     e.printStackTrace();
                 }
+            }
+            try {
+                fromClient.close();
+                toClient.close();
+            } catch (IOException e) {
+                System.out.println("Error during closing.");
+                e.printStackTrace();
             }
         }
 

@@ -55,15 +55,6 @@ public class ServerController {
         startBtn.setOnAction(actionEvent -> {
             if(portField.getText().length() > 0) {
                 try {
-                    /*
-                    PipedInputStream fromServer = new PipedInputStream();
-                    BufferedReader br = new BufferedReader(new InputStreamReader(fromServer));
-
-                    PipedOutputStream toLog = new PipedOutputStream();
-                    BufferedWriter bf = new BufferedWriter(new OutputStreamWriter(toLog));
-
-                    toLog.connect(fromServer);
-                    */
                     BlockingQueue<String> blockingQueue = new LinkedBlockingDeque<>(10);
                     server = new MyServer(Integer.parseInt(portField.getText()), blockingQueue);
                     listener = new ServerListener(blockingQueue);
@@ -71,6 +62,7 @@ public class ServerController {
                     statusEnabled();
                 } catch (IOException e) {
                     System.out.println(e.getMessage());
+                    alert("Error", e.getMessage(), Alert.AlertType.ERROR);
                 }
             } else {
                 alert("Error", "Enter port please.", Alert.AlertType.ERROR);
@@ -79,8 +71,10 @@ public class ServerController {
 
         stopBtn.setOnAction(actionEvent -> {
             if(server != null && server.isOpened()) {
+                listener.interrupt();
                 server.shutdown();
                 statusDisabled();
+                listener = null;
                 server = null;
             }
         });
@@ -127,12 +121,7 @@ public class ServerController {
             try {
                 while(!isInterrupted()) {
                     String message = fromServer.take();
-
-                    if(message == null) {
-                        interrupt();
-                    } else {
-                        appendLog(message + "\n");
-                    }
+                    appendLog(message + "\n");
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();

@@ -58,6 +58,7 @@ public class MyClient extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        interrupt();
     }
 
     public void send(String message) {
@@ -81,6 +82,7 @@ public class MyClient extends Thread {
             try {
                 while (!isInterrupted()) {
                     String message = fromS.readLine();
+                    if(message == null) break;
                     toU.write(message + "\n");
                     toU.flush();
                 }
@@ -120,7 +122,7 @@ public class MyClient extends Thread {
                 toS.flush();
             } catch (IOException e) {
                 e.printStackTrace();
-                    disconnect();
+                disconnect();
             }
         }
     }

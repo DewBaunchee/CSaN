@@ -73,12 +73,7 @@ public class ClientController {
         });
 
         disconnectBtn.setOnAction(actionEvent -> {
-            listener.interrupt();
-            client.interrupt();
-
-            listener = null;
-            client = null;
-            disconnectBtn.setVisible(false);
+            stopClient();
         });
 
         messageField.setOnKeyPressed(keyEvent -> {
@@ -95,10 +90,23 @@ public class ClientController {
         });
     }
 
+    public void stopClient() {
+        listener.interrupt();
+        client.interrupt();
+
+        listener = null;
+        client = null;
+        disconnectBtn.setVisible(false);
+    }
+
     public void send(String message) {
         if (client != null && client.isAlive() && messageField.getText().length() > 0) {
             client.send(message);
         }
+    }
+
+    public void appendMsg(String message) {
+        messagesArea.appendText(message);
     }
 
     public String dialog(String title, String question) {
@@ -134,6 +142,8 @@ public class ClientController {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
+            stopClient();
+            interrupt();
         }
 
         @Override
@@ -141,7 +151,8 @@ public class ClientController {
             try {
                 while (!isInterrupted()) {
                     String message = fromServer.readLine();
-                    messagesArea.appendText(message + "\n");
+                    if(message == null) break;
+                    appendMsg(message + "\n");
                 }
             } catch (IOException e) {
                 System.out.println(e.getMessage());
