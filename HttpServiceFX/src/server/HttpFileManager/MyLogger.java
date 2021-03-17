@@ -12,9 +12,9 @@ public class MyLogger extends Thread {
 
     public MyLogger(OutputStream logStream, Path logFile) throws IOException {
         this.logStream = logStream;
-        if(Files.exists(logFile)) {
+        if(logFile != null && Files.exists(logFile)) {
             this.logFile = logFile;
-            Files.writeString(logFile, "");
+            Files.write(logFile, new byte[]{});
         } else {
             this.logFile = null;
         }
@@ -39,7 +39,7 @@ public class MyLogger extends Thread {
 
         if(logFile != null && Files.exists(logFile)) {
             try {
-                Files.writeString(logFile, message + "\n", StandardOpenOption.APPEND);
+                Files.write(logFile, (message + "\n").getBytes(), StandardOpenOption.APPEND);
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println(getClass() + ".log: " + e.getMessage());

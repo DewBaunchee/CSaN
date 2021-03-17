@@ -1,5 +1,6 @@
 package server.HttpFileManager;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,11 +10,17 @@ import java.nio.file.Paths;
 public class HTTPServer extends Thread {
 
     private final int port;
-    private final String storage;
+    private String storage;
     private final MyLogger logger;
+    private ServerSocket server;
 
-    public HTTPServer(int port, String storage) throws IOException {
-        logger = new MyLogger(null, Paths.get("src/HttpFileManager/Log.txt"));
+    public HTTPServer(int port, String storage, MyLogger inLogger) throws IOException {
+        if(inLogger == null) {
+            logger = new MyLogger(null, null);
+        } else {
+            logger = inLogger;
+        }
+
         logger.log("Checking port " + port + "...");
         if(isPortFree(port)) {
             logger.log("Success: port " + port + " is free.");
@@ -46,10 +53,23 @@ public class HTTPServer extends Thread {
         }
     }
 
+    public void setStorage(String storage) {
+        logger.log("Setting new storage...");
+        if(storage != null && storage.length() > 0
+                && Files.exists(Paths.get(storage))
+                && Files.isDirectory(Paths.get(storage))) {
+            this.storage = storage;
+            logger.log("Success. ");
+        } else {
+            logger.log("Error: storage \"" + storage + "\" is not found.");
+        }
+    }
+
     @Override
     public void run() {
         logger.log("Starting server...");
-        try (ServerSocket server = new ServerSocket(port)) {
+        try {
+            server = new ServerSocket(port);
             logger.log("Started. Listening for sockets...");
             while(!isInterrupted()) {
                 Socket socket = server.accept();
@@ -57,12 +77,22 @@ public class HTTPServer extends Thread {
                 handler.start();
             }
         } catch (IOException e) {
-            logger.log(getClass() + ".run: " + e.getMessage());
-            e.printStackTrace();
+           // logger.log(getClass() + ".run: " + e.getMessage());
+           // e.printStackTrace();
+            shutdown();
         }
+        logger.log("Server stopped.");
     }
 
     public void shutdown() {
+        logger.log("Interrupting server...");
         interrupt();
+        try {
+            logger.log("Closing server socket...");
+            server.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log(e.getMessage());
+        }
     }
 }
