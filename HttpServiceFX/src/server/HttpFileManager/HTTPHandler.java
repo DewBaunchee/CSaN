@@ -1,4 +1,4 @@
-package HttpFileManager;
+package server.HttpFileManager;
 
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;

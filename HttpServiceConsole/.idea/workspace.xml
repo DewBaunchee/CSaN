@@ -2,32 +2,29 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42a5c4a4-a75b-4159-b05a-35e44cd47aed" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/description.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/project-template.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/HttpServiceConsole.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/HTTPHandler.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/MyLogger.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab1FX.rar" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/description.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/src/sample/Controller.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/src/sample/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/src/sample/sample.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/untitled.iml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/HTTPCommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/HTTPCommandHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/Log.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/folder/anotherTest.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/folder/bread.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/folder/index.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/folderCopy.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/h.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/q.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/style.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/tesd/fd/das.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/HttpFileManager/storage/tesd/fd/dasds.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HttpServiceConsole.iml" beforeDir="false" afterPath="$PROJECT_DIR$/HttpServiceConsole.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/HttpServiceConsole/HttpFileManager/HTTPHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/HttpServiceConsole/HttpFileManager/HTTPHandler.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/HttpServiceConsole/HttpFileManager/HTTPServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/HttpServiceConsole/HttpFileManager/HTTPServer.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/HttpServiceConsole/HttpFileManager/MyLogger.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/HttpServiceConsole/HttpFileManager/MyLogger.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/HttpServiceConsole/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/HttpServiceConsole/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HttpFileManager/HTTPHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HttpFileManager/HTTPHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HttpFileManager/HTTPServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HttpFileManager/HTTPServer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/HttpFileManager/MyLogger.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/HttpFileManager/MyLogger.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +40,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1pkwhBVNmL0iUxAC0S2jyhgYbCC" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
@@ -109,9 +114,12 @@
   </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/HttpFileManager/storage/folderCopy" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -119,17 +127,21 @@
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="project.structure.last.edited" value="Project" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\University\KSIS\HttpServiceConsole\src\HttpFileManager\storage\folderCopy" />
+      <recent name="D:\University\KSIS\HttpServiceConsole\src\HttpFileManager\storage\folderCopy\folder" />
+      <recent name="D:\University\KSIS\HttpServiceConsole\src\HttpFileManager\storage" />
+      <recent name="D:\University\KSIS\HttpServiceConsole\src\HttpFileManager\storage\folder" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\University\KSIS\HttpServiceConsole\src\HttpFileManager\storage\folder" />
+    </key>
   </component>
   <component name="RunManager">
-    <configuration name="Main" type="Application" factoryName="Application" temporary="true">
-      <option name="MAIN_CLASS_NAME" value="Main" />
-      <module name="HttpServiceConsole" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -137,6 +149,13 @@
         </value>
       </option>
       <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true">
+      <option name="MAIN_CLASS_NAME" value="Main" />
+      <module name="HttpServiceConsole" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
