@@ -1,7 +1,7 @@
 .cmd-pane {
     -fx-background-color: #3E3E3E;
     -fx-border-color: #222;
-    -fx-border-width: 0 0 2px 0;
+    -fx-border-width: 0 0 1px 0;
 }
 
 .split-pane  {
@@ -25,6 +25,7 @@
 
 .method-choice {
     -fx-background-color: #1D1D1D;
+    -fx-border-color: #000;
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
 }
@@ -36,25 +37,4 @@
 .console-btn {
     -fx-background-color: #1D1D1D;
     -fx-background-radius: 0 0 5px 0;
-}
-
-.text-area {
-    -fx-background-insets: 0;
-    -fx-background-color: #434343;
-    -fx-background-radius: 0, 0, 0, 0;
-	
-    -fx-text-fill: #FFFFFF;
-}
-
-.text-area .content {
-    -fx-background-color: #434343;
-    -fx-border-color: #434343;
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: #1D1D1D;
-}
-
-.files-tree-view {
-    -fx-background-color: #434343;
 }
