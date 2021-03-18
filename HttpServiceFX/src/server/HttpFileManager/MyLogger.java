@@ -1,17 +1,25 @@
 package server.HttpFileManager;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 public class MyLogger extends Thread {
 
-    private final OutputStream logStream;
-    private final Path logFile;
+    private BufferedWriter bw;
+    private Path logFile;
 
     public MyLogger(OutputStream logStream, Path logFile) throws IOException {
-        this.logStream = logStream;
+        if(logStream != null) {
+            this.bw = new BufferedWriter(new OutputStreamWriter(logStream));
+        } else {
+            this.bw = null;
+        }
+
         if(logFile != null && Files.exists(logFile)) {
             this.logFile = logFile;
             Files.write(logFile, new byte[]{});
@@ -20,20 +28,31 @@ public class MyLogger extends Thread {
         }
     }
 
+    public void setLogFile(Path path) {
+        logFile = path;
+    }
+
     public void close() throws IOException {
-        if (logStream != null)
-            logStream.close();
+        if (bw != null)
+            bw.close();
     }
 
     public void log(String message) {
         System.out.println(message);
 
-        if (logStream != null) {
-            try (PrintStream printer = new PrintStream(logStream)) {
-                printer.write(message.getBytes());
+        if (bw != null) {
+            try {
+                bw.write(message + "\n");
+                bw.flush();
             } catch (IOException e) {
                 e.printStackTrace();
                 System.out.println(getClass() + ".log: " + e.getMessage());
+                try {
+                    bw.close();
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
+                bw = null;
             }
         }
 

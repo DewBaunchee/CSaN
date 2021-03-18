@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="802.0" style="-fx-background-color: #3E3E3E;" stylesheets="@../../server/ui/style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <SplitPane dividerPositions="0.7646176911544228" prefHeight="160.0" prefWidth="200.0" styleClass="vertical-split-pane" stylesheets="@style.css" BorderPane.alignment="CENTER">
+        <items>
+            <SplitPane dividerPositions="0.6065217391304348" minWidth="350.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="horizontal-split-pane" stylesheets="@style.css">
+              <items>
+                <AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="251.0" prefWidth="490.0" stylesheets="@style.css" />
+                <AnchorPane minHeight="30.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" stylesheets="@style.css">
+                     <children>
+                        <Button layoutY="2.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="136.0" styleClass="console-btn" stylesheets="@../../server/ui/style.css" text="Close log" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="14.0" />
+                           </font>
+                           <opaqueInsets>
+                              <Insets />
+                           </opaqueInsets>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </Button>
+                     </children></AnchorPane>
+              </items>
+            </SplitPane>
+          <AnchorPane minHeight="0.0" minWidth="30.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@style.css" />
+        </items>
+      </SplitPane>
+   </center>
+   <top>
+      <AnchorPane prefHeight="62.0" prefWidth="802.0" styleClass="cmd-pane" stylesheets="@style.css" BorderPane.alignment="CENTER">
+         <children>
+            <TextField layoutX="92.0" layoutY="10.0" prefHeight="41.0" prefWidth="606.0" promptText="URL" styleClass="url-field" stylesheets="@style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="92.0" AnchorPane.rightAnchor="104.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font></TextField>
+            <Button layoutX="737.0" layoutY="19.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="85.0" styleClass="send" stylesheets="@style.css" text="SEND" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+               <font>
+                  <Font name="Arial" size="15.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ChoiceBox layoutX="14.0" layoutY="19.0" prefHeight="41.0" prefWidth="74.0" styleClass="method-choice" stylesheets="@style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ChoiceBox>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>

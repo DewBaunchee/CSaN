@@ -1,0 +1,40 @@
+.cmd-pane {
+    -fx-background-color: #3E3E3E;
+    -fx-border-color: #222;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.split-pane  {
+    -fx-background-color: #434343;
+}
+
+.vertical-split-pane .split-pane-divider {
+    -fx-background-color: #222;
+    -fx-padding: 1px;
+}
+
+.send {
+    -fx-background-color: #1D1D1D;
+    -fx-background-radius: 5px;
+}
+
+.url-field {
+    -fx-background-color: #656565;
+    -fx-text-fill: #FFF; 
+}
+
+.method-choice {
+    -fx-background-color: #1D1D1D;
+    -fx-border-color: #000;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
+
+.method-choice .arrow {
+    -fx-background-color: #FFF;
+}
+
+.console-btn {
+    -fx-background-color: #1D1D1D;
+    -fx-background-radius: 0 0 5px 0;
+}

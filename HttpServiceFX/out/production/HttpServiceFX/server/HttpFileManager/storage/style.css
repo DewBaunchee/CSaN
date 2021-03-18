@@ -1,0 +1,148 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Courier New', Courier, monospace;
+    color: #9E9E9E;
+}
+
+html {
+    height: 100%;
+    background-color: #2A2A2A;
+    background-image: url(../assets/images/bg.png);
+}
+
+body {
+    width: 60%;
+    height: 3100px;
+    background-color: #1B1B1B;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* HEADER */
+
+header {
+    width: 60%;
+    background-color: #131313;
+    position: fixed;
+    display: block;
+    opacity: 0.8;
+}
+
+header * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+header a {
+    text-decoration: none;
+    color: #9E9E9E;
+    height: 100%;
+}
+
+#titleContainer {
+    margin: auto;
+    padding: 5px 20px;
+}
+
+#titleContainer * {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#titleContainer a {
+    font-size: 35px;
+}
+
+.navigationElement {
+    font-size: 20px;
+    padding: 20px 20px;
+    height: 20px;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.navigationElement:hover {
+    background-color: #000;
+}
+
+/* MAIN */
+
+main {
+    text-align: center;
+}
+
+main h1 {
+    font-size: 40px;
+    color: #9E9E9E;
+    margin-top: 10px;
+}
+
+#mainPicture {
+    width: 100%;
+    display: block;
+}
+
+#mainPictureContainer {
+    padding-top: 60px;
+}
+
+hr {
+    margin-top: 5px;
+}
+
+.articlePreview {
+    display: block;
+    background-size: cover;
+    width: 90%;
+    height: 560px;
+    margin: 20px auto;
+    box-shadow: 10px 10px 10px #000;
+}
+
+.articlePreview:hover {
+    transition: all 0.5s ease;
+    transform: scale(1.01);
+}
+
+article {
+    margin: 0px 30px;
+}
+
+article p {
+    text-indent: 40px;
+    text-align: justify;
+}
+
+/* FOOTER */
+footer {
+    position: relative;
+    width: 100%;
+    height: 150px;
+    text-align: center;
+    background-color: #141414;
+}
+
+footer hr {
+    margin-bottom: 30px;
+}
+
+footer a {
+    color: #FFF;
+    margin:6px;
+    font-size: 15px;
+}
+
+footer p {
+    color: #FFF;
+    font-size: 12px;
+}
+
+.social {
+    padding-top: 15px;
+    margin-bottom: 15px;
+}
+
+.copyright {
+    font-size: 20px;
+}

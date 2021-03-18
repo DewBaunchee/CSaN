@@ -1,6 +1,5 @@
 package server.HttpFileManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -33,12 +32,10 @@ public class HTTPServer extends Thread {
                 logger.log("Success. ");
             } else {
                 logger.log("Error: storage \"" + storage + "\" is not found.");
-                logger.close();
                 throw new IOException("Error: storage \"" + storage + "\" is not found.");
             }
         } else {
             logger.log("Error: port " + port + " is not free.");
-            logger.close();
             throw new IOException("Error: port " + port + " is not free.");
         }
     }
@@ -77,8 +74,6 @@ public class HTTPServer extends Thread {
                 handler.start();
             }
         } catch (IOException e) {
-           // logger.log(getClass() + ".run: " + e.getMessage());
-           // e.printStackTrace();
             shutdown();
         }
         logger.log("Server stopped.");

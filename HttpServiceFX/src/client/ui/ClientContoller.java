@@ -1,4 +1,4 @@
-package server.ui;
+package client.ui;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -13,13 +13,13 @@ import server.HttpFileManager.HTTPServer;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import server.HttpFileManager.MyLogger;
-import server.ServerMain;
+import client.ClientMain;
 
 import java.io.*;
 import java.nio.file.Path;
 import java.util.Optional;
 
-public class ServerController {
+public class ClientContoller {
 
     @FXML
     private TextArea logArea;
@@ -155,7 +155,7 @@ public class ServerController {
         chooser.setTitle(title);
         File defaultDirectory = new File(new File("").getAbsolutePath());
         chooser.setInitialDirectory(defaultDirectory);
-        return chooser.showDialog(ServerMain.root.getScene().getWindow());
+        return chooser.showDialog(ClientMain.root.getScene().getWindow());
     }
 
     public File askFile(String title) {
@@ -163,7 +163,7 @@ public class ServerController {
         chooser.setTitle(title);
         File defaultDirectory = new File(new File("").getAbsolutePath());
         chooser.setInitialDirectory(defaultDirectory);
-        return chooser.showSaveDialog(ServerMain.root.getScene().getWindow());
+        return chooser.showSaveDialog(ClientMain.root.getScene().getWindow());
     }
 
     public void statusEnabled() {
