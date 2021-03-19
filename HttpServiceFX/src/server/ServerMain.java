@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import server.ui.ServerController;
 
 public class ServerMain extends Application {
 
@@ -19,6 +20,7 @@ public class ServerMain extends Application {
         primaryStage.getIcons().add(new Image("server/ui/icons/server.png"));
         primaryStage.setMinHeight(450);
         primaryStage.setMinWidth(650);
+        primaryStage.setOnCloseRequest(ServerController.closeEvent);
         primaryStage.show();
     }
 

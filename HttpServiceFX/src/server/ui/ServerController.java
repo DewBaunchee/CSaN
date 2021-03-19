@@ -8,6 +8,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 import server.HttpFileManager.HTTPServer;
 
 import javafx.event.ActionEvent;
@@ -43,9 +44,23 @@ public class ServerController {
     private Thread statusChecker;
     private MyLogger logger;
     private LoggerListener listener;
+    public static EventHandler<WindowEvent> closeEvent;
 
     @FXML
     void initialize() {
+        closeEvent = windowEvent -> {
+            if (listener != null) listener.interrupt();
+            if (server != null) server.shutdown();
+            if (statusChecker != null) statusChecker.interrupt();
+            if (logger != null) {
+                try {
+                    logger.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
         startStopBtn.setDisable(true);
         setStorageBtn.setDisable(true);
         setLogFileBtn.setDisable(true);
@@ -81,7 +96,7 @@ public class ServerController {
                         path = logFile.toPath();
                     }
 
-                    if(listener != null) {
+                    if (listener != null) {
                         listener.interrupt();
                     }
 
@@ -101,14 +116,14 @@ public class ServerController {
 
         EventHandler<ActionEvent> setStorageEvent = actionEvent -> {
             File storage = askFolder("Choose storage folder");
-            if(storage != null && server != null) {
+            if (storage != null && server != null) {
                 server.setStorage(storage.getAbsolutePath());
             }
         };
 
         EventHandler<ActionEvent> setLogFileEvent = actionEvent -> {
             File logFile = askFile("Choose log file");
-            if(logFile != null && logger != null) {
+            if (logFile != null && logger != null) {
                 logger.setLogFile(logFile.toPath());
             }
         };
@@ -118,7 +133,7 @@ public class ServerController {
         setLogFileBtn.setOnAction(setLogFileEvent);
 
         portField.setOnKeyPressed(keyEvent -> {
-            if(keyEvent.getCode() == KeyCode.ENTER) {
+            if (keyEvent.getCode() == KeyCode.ENTER) {
                 startStopBtn.fire();
             }
         });
@@ -199,7 +214,7 @@ public class ServerController {
         public void run() {
             try {
                 while (!isInterrupted()) {
-                    if(br.ready()) {
+                    if (br.ready()) {
                         String line = br.readLine();
                         Platform.runLater(() -> {
                             logArea.appendText(line + "\n");

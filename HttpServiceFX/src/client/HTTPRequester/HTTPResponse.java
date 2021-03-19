@@ -1,37 +1,49 @@
 package client.HTTPRequester;
 
 public class HTTPResponse {
-    private int statusCode;
-    private String statusText;
-    private byte[] body;
+    private final String host;
+    private final int port;
+    private final String method;
+    private final int statusCode;
+    private final String statusText;
+    private final String contentType;
+    private final byte[] body;
 
-    public HTTPResponse(int statusCode, String statusText, byte[] body) {
+    public HTTPResponse(String host, int port, String method, int statusCode, String statusText, String contentType, byte[] body) {
+        this.host = host;
+        this.port = port;
+        this.method = method;
         this.statusCode = statusCode;
         this.statusText = statusText;
+        this.contentType = contentType;
         this.body = body;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public String getMethod() {
+        return method;
     }
 
     public int getStatusCode() {
         return statusCode;
     }
 
-    public void setStatusCode(int statusCode) {
-        this.statusCode = statusCode;
-    }
-
     public String getStatusText() {
         return statusText;
     }
 
-    public void setStatusText(String statusText) {
-        this.statusText = statusText;
+    public String getContentType() {
+        return contentType;
     }
 
     public byte[] getBody() {
         return body;
-    }
-
-    public void setBody(byte[] body) {
-        this.body = body;
     }
 }

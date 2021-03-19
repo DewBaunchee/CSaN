@@ -29,6 +29,7 @@ public class HTTPServer extends Thread {
                     && Files.isDirectory(Paths.get(storage))) {
                 this.port = port;
                 this.storage = storage;
+                logger.log("Storage: " + storage);
                 logger.log("Success. ");
             } else {
                 logger.log("Error: storage \"" + storage + "\" is not found.");

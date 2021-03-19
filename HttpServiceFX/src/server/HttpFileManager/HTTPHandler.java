@@ -23,16 +23,10 @@ public class HTTPHandler extends Thread {
     public void run() {
         logger.log("Starting handler for socket: " + socket.toString());
         try (InputStream in = socket.getInputStream(); OutputStream out = socket.getOutputStream()) {
-            if (in.available() == 0) {
-                socket.close();
-                return;
-            }
-
             String header = getRequestHeader(in);
             int contentLengthIndex = header.indexOf("Content-Length: ") + "Content-Length: ".length();
             byte[] body = getRequestBody(in,
                     Integer.parseInt(header.substring(contentLengthIndex, header.indexOf("\n", contentLengthIndex))));
-            System.out.println(new String(body));
             handle(header, body, out);
         } catch (IOException | InvocationTargetException | IllegalAccessException e) {
             logger.log(getClass() + ".run: " + e.getMessage());
@@ -54,7 +48,7 @@ public class HTTPHandler extends Thread {
         StringBuilder sb = new StringBuilder();
 
         char prev = 0;
-        while (in.available() > 0) {
+        while (true) {
             char c = (char) in.read();
             if(c == '\n' && prev == '\n') break;
             if(c == '\r') continue;
@@ -69,7 +63,7 @@ public class HTTPHandler extends Thread {
         byte[] body = new byte[length];
 
         int i = 0;
-        while (in.available() > 0 && i < length) {
+        while (i < length) {
             body[i++] = (byte) in.read();
         }
 

@@ -2,26 +2,32 @@ package client.ui;
 
 import client.ClientMain;
 import client.HTTPRequester.HTTPRequester;
+import client.HTTPRequester.HTTPResponse;
 import client.HTTPRequester.MyLogger;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
-import javafx.stage.DirectoryChooser;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
+import javafx.stage.WindowEvent;
 
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.List;
 
 public class ClientController {
 
@@ -59,7 +65,7 @@ public class ClientController {
     private TextField fileField;
 
     @FXML
-    private AnchorPane contentPane;
+    private ScrollPane contentPane;
 
     @FXML
     private AnchorPane logAnchorPane;
@@ -71,7 +77,7 @@ public class ClientController {
     private TextArea logArea;
 
     @FXML
-    private TreeView<SplitPane> filesTreeView;
+    private TreeView<AnchorPane> filesTreeView;
 
     @FXML
     private TextField URLField;
@@ -82,11 +88,31 @@ public class ClientController {
     @FXML
     private ChoiceBox<String> methodChoice;
 
-    private MyLogger logger;
-    private LoggerListener listener;
+    @FXML
+    private Label statusCodeLabel;
 
     @FXML
-    void initialize() {
+    private Label statusTextLabel;
+
+    private MyLogger logger;
+    private LoggerListener listener;
+    public static EventHandler<WindowEvent> closeEvent;
+
+    @FXML
+    void initialize() { // TODO Пропадает в treeview надписи при наведении https://www.sql.ru/forum/1054835/javafx-treeview-label-ischezaut-elementy-pri-peremeshhenii-po-nim
+        closeEvent = windowEvent -> {
+            if (listener != null) listener.interrupt();
+            if (logger != null) {
+                try {
+                    logger.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+
+        URLField.setText("http://localhost:809");
+
         try {
             listener = new LoggerListener();
             logger = new MyLogger(listener.getOutputStream(), null);
@@ -125,16 +151,16 @@ public class ClientController {
         };
 
         EventHandler<ActionEvent> sendEvent = actionEvent -> {
-            if(URLField.getText().length() > 0) {
+            if (URLField.getText().length() > 0) {
                 byte[] body = new byte[0];
 
-                if(bodyEnterWay.getSelectedToggle().equals(enterTextRB)) {
+                if (bodyEnterWay.getSelectedToggle().equals(enterTextRB)) {
                     body = bodyTextArea.getText().getBytes();
                 } else {
-                    if(bodyEnterWay.getSelectedToggle().equals(chooseFileRB)) {
+                    if (bodyEnterWay.getSelectedToggle().equals(chooseFileRB)) {
                         Path bodyFile = Paths.get(fileField.getText());
 
-                        if(Files.exists(bodyFile) && !Files.isDirectory(bodyFile)) {
+                        if (Files.exists(bodyFile) && !Files.isDirectory(bodyFile)) {
                             try {
                                 body = Files.readAllBytes(bodyFile);
                             } catch (IOException e) {
@@ -147,16 +173,19 @@ public class ClientController {
                     }
                 }
 
+                statusCodeLabel.setText("Status code");
+                statusTextLabel.setText("Status text");
+                setStatusLabelsColor(0);
                 HTTPRequester requester = new HTTPRequester(methodChoice.getValue(), URLField.getText(), body, logger);
-
+                interpretResponse(requester.handle());
             } else {
                 alert("Warning", "Enter URL!", Alert.AlertType.WARNING);
             }
         };
 
         EventHandler<ActionEvent> chooseFileBtnEvent = actionEvent -> {
-            File file = askFile("Choose file for body request");
-            if(file != null) {
+            File file = askFile("Choose file for body request", false);
+            if (file != null) {
                 fileField.setText(file.getAbsolutePath());
             }
         };
@@ -168,20 +197,36 @@ public class ClientController {
             centerSplitPane.setDividerPositions(0.6);
         };
 
+        filesTreeView.setOnMouseClicked(mouseEvent -> {
+            if (mouseEvent.getButton() == MouseButton.PRIMARY
+                    && mouseEvent.getClickCount() == 2) {
+                TreeItem<AnchorPane> item = filesTreeView.getSelectionModel().getSelectedItem();
+                if (item.getChildren().size() == 0) {
+                    methodChoice.setValue("GET");
+                    URLField.setText("http://" + reconstructPath(item));
+                    sendBtn.fire();
+                }
+            }
+        });
+
+        URLField.setOnKeyPressed(keyEvent -> {
+            if (keyEvent.getCode() == KeyCode.ENTER) sendBtn.fire();
+        });
+
         bodyEnterWay.selectedToggleProperty().addListener((observableValue, oldToggle, newToggle) -> {
             if (chooseFileRB.equals(newToggle)) {
                 chooseFileHBox.setVisible(true);
                 bodyTextArea.setVisible(false);
                 return;
             }
-            if(enterTextRB.equals(newToggle)) {
+            if (enterTextRB.equals(newToggle)) {
                 chooseFileHBox.setVisible(false);
                 bodyTextArea.setVisible(true);
             }
         });
 
         logArea.heightProperty().addListener((observableValue, oldValue, newValue) -> {
-            if(newValue.doubleValue() < 30) {
+            if (newValue.doubleValue() < 30) {
                 closeLogBtn.setText("Open log");
                 closeLogBtn.setOnAction(openLogEvent);
             } else {
@@ -190,9 +235,45 @@ public class ClientController {
             }
         });
 
+        sendBtn.setOnAction(sendEvent);
         chooseFileBtn.setOnAction(chooseFileBtnEvent);
         contentBtn.setOnAction(contentBtnEvent);
         requestBodyBtn.setOnAction(requestBodyBtnEvent);
+    }
+
+    private String reconstructPath(TreeItem<AnchorPane> item) {
+        StringBuilder sb = new StringBuilder();
+        TreeItem<AnchorPane> current = item;
+        while (current != null) {
+            sb.insert(0, getTreeViewText(current));
+            current = current.getParent();
+        }
+        return sb.toString();
+    }
+
+    private String getTreeViewText(TreeItem<AnchorPane> item) {
+        return ((Label) item.getValue().getChildren().get(1)).getText();
+    }
+
+    private void setStatusLabelsColor(int statusCode) {
+        switch (statusCode / 100) {
+            case 2 -> {
+                statusCodeLabel.setTextFill(Color.rgb(0, 255, 0));
+                statusTextLabel.setTextFill(Color.rgb(0, 255, 0));
+            }
+            case 4 -> {
+                statusCodeLabel.setTextFill(Color.rgb(230, 0, 0));
+                statusTextLabel.setTextFill(Color.rgb(230, 0, 0));
+            }
+            case 5 -> {
+                statusCodeLabel.setTextFill(Color.rgb(255, 219, 0));
+                statusTextLabel.setTextFill(Color.rgb(255, 219, 0));
+            }
+            default -> {
+                statusCodeLabel.setTextFill(Color.rgb(255, 255, 255));
+                statusTextLabel.setTextFill(Color.rgb(255, 255, 255));
+            }
+        }
     }
 
     public static final HashMap<String, String> iconsPaths = new HashMap<>() {{
@@ -209,7 +290,7 @@ public class ClientController {
     public TreeItem<AnchorPane> newTreeViewFile(String name, String extension) {
         AnchorPane pane = new AnchorPane();
         String iconPath = iconsPaths.get(extension);
-        if(iconPath == null) iconPath = iconsPaths.get("file");
+        if (iconPath == null) iconPath = iconsPaths.get("file");
         ImageView img = new ImageView(iconPath);
         img.setFitHeight(30);
         img.setFitWidth(30);
@@ -232,16 +313,6 @@ public class ClientController {
         return new TreeItem<>(pane);
     }
 
-    public String dialog(String title, String question) {
-        TextInputDialog dialog = new TextInputDialog();
-        dialog.setTitle(title);
-        dialog.setHeaderText(question);
-        dialog.getDialogPane().setMinWidth(400);
-
-        Optional<String> result = dialog.showAndWait();
-        return result.orElse(null);
-    }
-
     public void alert(String title, String content, Alert.AlertType type) {
         logger.log("Alert: \n   Title: " + title + "\n   Content: " + content);
         Alert alert = new Alert(type);
@@ -251,20 +322,16 @@ public class ClientController {
         alert.showAndWait();
     }
 
-    public File askFolder(String title) {
-        DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle(title);
-        File defaultDirectory = new File(new File("").getAbsolutePath());
-        chooser.setInitialDirectory(defaultDirectory);
-        return chooser.showDialog(ClientMain.root.getScene().getWindow());
-    }
-
-    public File askFile(String title) {
+    public File askFile(String title, boolean isSave) {
         FileChooser chooser = new FileChooser();
         chooser.setTitle(title);
         File defaultDirectory = new File(new File("").getAbsolutePath());
         chooser.setInitialDirectory(defaultDirectory);
-        return chooser.showSaveDialog(ClientMain.root.getScene().getWindow());
+        if (isSave) {
+            return chooser.showSaveDialog(ClientMain.root.getScene().getWindow());
+        } else {
+            return chooser.showOpenDialog(ClientMain.root.getScene().getWindow());
+        }
     }
 
     class LoggerListener extends Thread {
@@ -286,7 +353,7 @@ public class ClientController {
         public void run() {
             try {
                 while (!isInterrupted()) {
-                    if(br.ready()) {
+                    if (br.ready()) {
                         String line = br.readLine();
                         Platform.runLater(() -> logArea.appendText(line + "\n"));
                     }
@@ -295,6 +362,107 @@ public class ClientController {
                 System.out.println(e.getMessage());
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void interpretResponse(HTTPResponse response) {
+        if (response == null) {
+            alert("Error", "Unknown error during connection.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        statusCodeLabel.setText(response.getStatusCode() + "");
+        statusTextLabel.setText(response.getStatusText());
+        setStatusLabelsColor(response.getStatusCode());
+
+        if (response.getContentType().equals("text/plain")
+                || response.getContentType().equals("application/json")) {
+            logger.log("Response body: \n" + new String(response.getBody()) + "\n----End of response body----");
+        }
+
+        interpretMethod(response);
+    }
+
+    private void interpretMethod(HTTPResponse response) {
+        contentPane.setContent(null);
+        switch (response.getMethod()) {
+            case "PUT", "DELETE", "COPY", "MOVE", "HELP", "POST" -> {
+                Label label = new Label(new String(response.getBody()));
+                label.setFont(Font.font("Arial", 18));
+                label.setTextFill(Color.rgb(255, 255, 255));
+                contentPane.setContent(label);
+            }
+            case "GET" -> fillContentPane(response.getContentType(), response.getBody());
+            case "VIEW" -> fillFileBrowser(response.getHost(), response.getPort(), response.getBody());
+        }
+    }
+
+    private void fillFileBrowser(String host, int port, byte[] body) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<String> paths;
+        try {
+            paths = mapper.readValue(body, List.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.log("Error: " + getClass() + ".fillFileBrowser: " + e.getMessage());
+            return;
+        }
+
+        filesTreeView.setRoot(recFill(paths, "/"));
+        ((Label) filesTreeView.getRoot().getValue().getChildren().get(1)).setText(host + ":" + port + "/");
+    }
+
+    private TreeItem<AnchorPane> recFill(List<String> paths, String current) {
+        TreeItem<AnchorPane> currentItem;
+        if (current.endsWith("/")) {
+            String name = current.substring(current.lastIndexOf("/", current.length() - 2) + 1);
+            currentItem = newTreeViewFile(name, "folder");
+
+            for (String path : paths) {
+                if (isDirectChild(current, path)) {
+                    currentItem.getChildren().add(recFill(paths, path));
+                }
+            }
+        } else {
+            String name = current.substring(current.lastIndexOf("/") + 1);
+            String extension = name.contains(".") ? name.substring(name.indexOf(".") + 1) : "";
+            currentItem = newTreeViewFile(name, extension);
+        }
+
+        return currentItem;
+    }
+
+    private boolean isDirectChild(String parent, String child) {
+        child = child.substring(0, child.length() - 1);
+        if (child.startsWith(parent)) {
+            return child.lastIndexOf("/") == parent.length() - 1;
+        }
+        return false;
+    }
+
+    private void fillContentPane(String type, byte[] content) {
+        if (type.contains("image")) {
+            try {
+                Path path = Paths.get("temp." + type.substring(type.indexOf("/") + 1)).toAbsolutePath();
+                Files.write(path, content);
+                ImageView imgView = new ImageView(new Image(path.toString()));
+                contentPane.setContent(imgView);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        if (type.equals("text/html")) {
+            WebView web = new WebView();
+            web.getEngine().loadContent(new String(content));
+            contentPane.setContent(web);
+            return;
+        }
+        if (type.contains("text")) {
+            Label label = new Label(new String(content));
+            label.setFont(Font.font("Arial", 16));
+            label.setTextFill(Color.WHITE);
+            contentPane.setContent(label);
         }
     }
 }

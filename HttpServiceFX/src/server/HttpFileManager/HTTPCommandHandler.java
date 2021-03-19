@@ -32,8 +32,6 @@ public class HTTPCommandHandler {
         types.put("", "text/plain");
     }
 
-    ;
-
     public final static HashMap<String, Method> commands = new HashMap<>();
 
     static {
