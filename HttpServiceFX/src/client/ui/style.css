@@ -1,5 +1,5 @@
 .cmd-pane {
-    -fx-background-color: #3E3E3E;
+    -fx-background-color: #303030;
     -fx-border-color: #222;
     -fx-border-width: 0 0 2px 0;
 }
@@ -14,11 +14,15 @@
 }
 
 .send {
-    -fx-background-color: #1D1D1D;
+    -fx-background-color: linear-gradient(to bottom right, rgba(172, 0, 244, 1) 30%, rgba(255, 0, 0, 1));
     -fx-background-radius: 5px;
 }
 
-.url-field {
+.send:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(255, 0, 0, 0.1), 2, 1, 0, 0);
+}
+
+.text-field {
     -fx-background-color: #656565;
     -fx-text-fill: #FFF; 
 }
@@ -27,10 +31,29 @@
     -fx-background-color: #1D1D1D;
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
+
+	-fx-font-family: "Arial";
+	-fx-font-size: 18px;
 }
 
 .method-choice .arrow {
     -fx-background-color: #FFF;
+}
+
+.method-choice .context-menu {
+	-fx-background-color: #1D1D1D;
+}
+
+.method-choice .menu-item {
+	-fx-background-color: #1D1D1D;
+}
+
+.method-choice .menu-item:focused .label {
+	-fx-text-fill: #FFF;
+}
+
+.method-choice .label {
+	-fx-text-fill: #888;
 }
 
 .console-btn {
@@ -38,17 +61,43 @@
     -fx-background-radius: 0 0 5px 0;
 }
 
+.console-btn:hover {
+	-fx-background-color: #D40000;
+}
+
+.page-choose-btn {
+    -fx-background-color: #1D1D1D;
+    -fx-background-radius: 0 0 5px 0;
+}
+
+.page-choose-btn:hover {
+	-fx-background-color: linear-gradient(to bottom right, rgba(172, 0, 244, 1) 30%, rgba(255, 0, 0, 1));
+}
+
+.request-body-pane, .content-pane, .main-pane {
+	-fx-background-color: #333;
+}
+
+.choose-file-btn {
+	-fx-background-color: #1D1D1D;
+	-fx-background-radius: 5px 0 0 5px;
+}
+
+.choose-file-btn:hover {
+	-fx-background-color: #0FC0FC;
+}
+
 .text-area {
     -fx-background-insets: 0;
-    -fx-background-color: #434343;
+    -fx-background-color: #333;
     -fx-background-radius: 0, 0, 0, 0;
 	
     -fx-text-fill: #FFFFFF;
 }
 
 .text-area .content {
-    -fx-background-color: #434343;
-    -fx-border-color: #434343;
+    -fx-background-color: #333;
+    -fx-border-color: #333;
 }
 
 .scroll-bar .thumb {
@@ -56,5 +105,56 @@
 }
 
 .files-tree-view {
-    -fx-background-color: #434343;
+	-fx-background-color: #333;
+	-fx-border: 0;
 }
+
+.files-tree-view .tree-cell {
+    -fx-background-color: #333;
+}
+
+.files-tree-view .tree-cell:hover {
+	-fx-background-color: #222;
+	-fx-text-fill: #FFF;
+}
+
+.files-tree-view .arrow {
+	-fx-background-color: #AAA;
+}
+
+.files-tree-view .diclosure-node {
+	-fx-padding: 5px;
+}
+
+
+.files-tree-view .tree-cell:hover .arrow {
+	-fx-background-color: #FFF;
+}
+
+
+.files-tree-view .tree-cell:hover .label {
+	-fx-text-fill: #FFF;
+}
+
+.enter-way-hbox {
+	-fx-border-color: #000;
+	-fx-border-width: 0px 0 1px 0;
+	-fx-background-color: #373737;
+}
+
+.page-choose-hbox {
+	-fx-background-color: #323232;
+	-fx-border-color: #000;
+	-fx-border-width: 0px 0 1px 0;
+}
+
+
+
+
+
+
+
+
+
+
+

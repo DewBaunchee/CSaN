@@ -13,6 +13,7 @@
 
 .text-area .content {
     -fx-background-color: #434343;
+    -fx-border-color: #434343;
 }
 
 .scroll-bar:horizontal .thumb, .scroll-bar:vertical .thumb {

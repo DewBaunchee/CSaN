@@ -1,25 +1,120 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.TreeView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="802.0" style="-fx-background-color: #3E3E3E;" stylesheets="@../../server/ui/style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="802.0" style="-fx-background-color: #3E3E3E;" stylesheets="@../../server/ui/style.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.ui.ClientController">
    <center>
       <SplitPane dividerPositions="0.7646176911544228" prefHeight="160.0" prefWidth="200.0" styleClass="vertical-split-pane" stylesheets="@style.css" BorderPane.alignment="CENTER">
         <items>
-            <SplitPane dividerPositions="0.6065217391304348" minWidth="350.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="horizontal-split-pane" stylesheets="@style.css">
+            <SplitPane fx:id="centerSplitPane" dividerPositions="0.6065217391304348" minWidth="350.0" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" styleClass="horizontal-split-pane" stylesheets="@style.css">
               <items>
-                <AnchorPane minHeight="0.0" minWidth="200.0" prefHeight="251.0" prefWidth="490.0" stylesheets="@style.css" />
-                <AnchorPane minHeight="30.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" stylesheets="@style.css">
+                <AnchorPane fx:id="contentPaneContainer" minHeight="0.0" minWidth="200.0" prefHeight="251.0" prefWidth="490.0" styleClass="main-pane" stylesheets="@style.css">
                      <children>
-                        <Button layoutY="2.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="136.0" styleClass="console-btn" stylesheets="@../../server/ui/style.css" text="Close log" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <HBox layoutX="52.0" layoutY="6.0" prefHeight="24.0" prefWidth="611.0" styleClass="page-choose-hbox" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Button fx:id="contentBtn" mnemonicParsing="false" opacity="0.6" stylesheets="@style.css" text="Content" textFill="WHITE">
+                                 <font>
+                                    <Font name="Arial" size="12.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="content-btn" />
+                                    <String fx:value="page-choose-btn" />
+                                 </styleClass>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                              <Button fx:id="requestBodyBtn" mnemonicParsing="false" stylesheets="@style.css" text="Request body" textFill="WHITE">
+                                 <font>
+                                    <Font name="Arial" size="12.0" />
+                                 </font>
+                                 <styleClass>
+                                    <String fx:value="request-body-btn" />
+                                    <String fx:value="page-choose-btn" />
+                                 </styleClass>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                           </children>
+                        </HBox>
+                        <AnchorPane fx:id="requestBodyPane" layoutY="37.0" prefHeight="249.0" prefWidth="611.0" styleClass="request-body-pane" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.00000000000003">
+                           <children>
+                              <HBox prefHeight="26.0" prefWidth="611.0" styleClass="enter-way-hbox" stylesheets="@style.css" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <children>
+                                    <RadioButton fx:id="enterTextRB" mnemonicParsing="false" selected="true" text="Enter text" textFill="WHITE">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                       <toggleGroup>
+                                          <ToggleGroup fx:id="bodyEnterWay" />
+                                       </toggleGroup>
+                                    </RadioButton>
+                                    <RadioButton fx:id="chooseFileRB" mnemonicParsing="false" text="Choose file" textFill="WHITE" toggleGroup="$bodyEnterWay">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="10.0" />
+                                       </HBox.margin>
+                                    </RadioButton>
+                                 </children>
+                                 <padding>
+                                    <Insets bottom="7.0" left="10.0" top="7.0" />
+                                 </padding>
+                              </HBox>
+                              <TextArea fx:id="bodyTextArea" layoutY="32.0" prefHeight="218.0" prefWidth="611.0" promptText="Enter text" wrapText="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                                 <font>
+                                    <Font name="Arial" size="12.0" />
+                                 </font>
+                              </TextArea>
+                              <HBox fx:id="chooseFileHBox" prefHeight="35.0" prefWidth="611.0" visible="false" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+                                 <children>
+                                    <Button fx:id="chooseFileBtn" mnemonicParsing="false" prefHeight="23.0" styleClass="choose-file-btn" text="Choose file" textFill="WHITE">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets right="-5.0" />
+                                       </HBox.margin>
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                    <TextField fx:id="fileField" prefHeight="24.0" prefWidth="311.0">
+                                       <font>
+                                          <Font name="Arial" size="12.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                                 <padding>
+                                    <Insets left="7.0" top="5.0" />
+                                 </padding>
+                              </HBox>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="contentPane" prefHeight="200.0" prefWidth="200.0" styleClass="content-pane" stylesheets="@style.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="24.0" />
+                     </children></AnchorPane>
+                <AnchorPane fx:id="logAnchorPane" minHeight="30.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" stylesheets="@style.css">
+                     <children>
+                        <Button fx:id="closeLogBtn" layoutY="2.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="136.0" styleClass="console-btn" stylesheets="@../../server/ui/style.css" text="Close log" textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
                            <font>
                               <Font size="14.0" />
                            </font>
@@ -30,21 +125,32 @@
                               <Cursor fx:constant="HAND" />
                            </cursor>
                         </Button>
+                        <TextArea fx:id="logArea" layoutY="30.0" prefHeight="200.0" prefWidth="603.0" promptText="Log" styleClass="log-area" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                           <font>
+                              <Font name="Arial" size="14.0" />
+                           </font>
+                        </TextArea>
                      </children></AnchorPane>
               </items>
             </SplitPane>
-          <AnchorPane minHeight="0.0" minWidth="30.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@style.css" />
+          <AnchorPane minHeight="0.0" minWidth="30.0" prefHeight="160.0" prefWidth="100.0" stylesheets="@style.css">
+               <children>
+                  <TreeView fx:id="filesTreeView" prefHeight="200.0" prefWidth="200.0" styleClass="files-tree-view" stylesheets="@style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor></TreeView>
+               </children></AnchorPane>
         </items>
       </SplitPane>
    </center>
    <top>
       <AnchorPane prefHeight="62.0" prefWidth="802.0" styleClass="cmd-pane" stylesheets="@style.css" BorderPane.alignment="CENTER">
          <children>
-            <TextField layoutX="92.0" layoutY="10.0" prefHeight="41.0" prefWidth="606.0" promptText="URL" styleClass="url-field" stylesheets="@style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="92.0" AnchorPane.rightAnchor="104.0" AnchorPane.topAnchor="10.0">
+            <TextField fx:id="URLField" layoutX="127.0" layoutY="10.0" prefHeight="40.0" prefWidth="571.0" promptText="URL" styleClass="url-field" stylesheets="@style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="127.0" AnchorPane.rightAnchor="104.0" AnchorPane.topAnchor="10.0">
                <font>
-                  <Font name="Arial" size="16.0" />
+                  <Font name="Arial" size="18.0" />
                </font></TextField>
-            <Button layoutX="737.0" layoutY="19.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="85.0" styleClass="send" stylesheets="@style.css" text="SEND" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <Button fx:id="sendBtn" layoutX="737.0" layoutY="19.0" mnemonicParsing="false" prefHeight="41.0" prefWidth="85.0" styleClass="send" stylesheets="@style.css" text="SEND" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font name="Arial" size="15.0" />
                </font>
@@ -52,7 +158,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </Button>
-            <ChoiceBox layoutX="14.0" layoutY="19.0" prefHeight="41.0" prefWidth="74.0" styleClass="method-choice" stylesheets="@style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
+            <ChoiceBox fx:id="methodChoice" layoutX="14.0" layoutY="19.0" prefHeight="40.0" prefWidth="106.0" styleClass="method-choice" stylesheets="@style.css" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>

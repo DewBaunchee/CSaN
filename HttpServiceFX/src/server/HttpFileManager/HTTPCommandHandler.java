@@ -250,6 +250,14 @@ public class HTTPCommandHandler {
             return;
         }
 
+        if (isCanonicalNeeded) {
+            list.add(storageDir.getAbsolutePath()
+                    .substring(storageDir.getAbsolutePath().indexOf(root) + root.length() + 1)
+                    .replace("\\", "/") + "/");
+        } else {
+            list.add(storageDir.getAbsolutePath() + "/");
+        }
+
         for (File current : files) {
             if (current.isDirectory()) {
                 fillListOfFiles(root, current.getAbsolutePath(), list, isCanonicalNeeded);

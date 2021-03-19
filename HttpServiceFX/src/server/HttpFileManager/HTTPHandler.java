@@ -32,7 +32,7 @@ public class HTTPHandler extends Thread {
             int contentLengthIndex = header.indexOf("Content-Length: ") + "Content-Length: ".length();
             byte[] body = getRequestBody(in,
                     Integer.parseInt(header.substring(contentLengthIndex, header.indexOf("\n", contentLengthIndex))));
-
+            System.out.println(new String(body));
             handle(header, body, out);
         } catch (IOException | InvocationTargetException | IllegalAccessException e) {
             logger.log(getClass() + ".run: " + e.getMessage());

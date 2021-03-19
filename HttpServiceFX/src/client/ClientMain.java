@@ -15,10 +15,10 @@ public class ClientMain extends Application {
     public void start(Stage primaryStage) throws Exception{
         root = FXMLLoader.load(getClass().getResource("ui/client.fxml"));
         primaryStage.setTitle("HTTP File manager server");
-        primaryStage.setScene(new Scene(root, 550, 400));
+        primaryStage.setScene(new Scene(root, 850, 550));
         primaryStage.getIcons().add(new Image("client/ui/icons/mainIcon.png"));
-        primaryStage.setMinHeight(450);
-        primaryStage.setMinWidth(650);
+        primaryStage.setMinHeight(550);
+        primaryStage.setMinWidth(800);
         primaryStage.show();
     }
 
