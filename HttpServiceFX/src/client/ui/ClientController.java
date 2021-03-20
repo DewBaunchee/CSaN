@@ -23,6 +23,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.WindowEvent;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -99,7 +100,7 @@ public class ClientController {
     public static EventHandler<WindowEvent> closeEvent;
 
     @FXML
-    void initialize() { // TODO Пропадает в treeview надписи при наведении https://www.sql.ru/forum/1054835/javafx-treeview-label-ischezaut-elementy-pri-peremeshhenii-po-nim
+    void initialize() {
         closeEvent = windowEvent -> {
             if (listener != null) listener.interrupt();
             if (logger != null) {
@@ -132,7 +133,7 @@ public class ClientController {
         methodChoice.getItems().add("VIEW");
         methodChoice.getItems().add("HELP");
 
-        methodChoice.setValue("HELP");
+        methodChoice.setValue("VIEW");
 
         EventHandler<ActionEvent> contentBtnEvent = actionEvent -> {
             contentPane.setVisible(true);
@@ -201,6 +202,7 @@ public class ClientController {
             if (mouseEvent.getButton() == MouseButton.PRIMARY
                     && mouseEvent.getClickCount() == 2) {
                 TreeItem<AnchorPane> item = filesTreeView.getSelectionModel().getSelectedItem();
+                if(item == null) return;
                 if (item.getChildren().size() == 0) {
                     methodChoice.setValue("GET");
                     URLField.setText("http://" + reconstructPath(item));
@@ -292,8 +294,8 @@ public class ClientController {
         String iconPath = iconsPaths.get(extension);
         if (iconPath == null) iconPath = iconsPaths.get("file");
         ImageView img = new ImageView(iconPath);
-        img.setFitHeight(30);
-        img.setFitWidth(30);
+        img.setFitHeight(25);
+        img.setFitWidth(25);
 
         Label label = new Label(name);
         label.setTextFill(Color.rgb(160, 160, 160));
@@ -377,7 +379,7 @@ public class ClientController {
 
         if (response.getContentType().equals("text/plain")
                 || response.getContentType().equals("application/json")) {
-            logger.log("Response body: \n" + new String(response.getBody()) + "\n----End of response body----");
+            logger.log("Response body: \n" + new String(response.getBody(), StandardCharsets.UTF_8) + "\n----End of response body----");
         }
 
         interpretMethod(response);
@@ -386,15 +388,30 @@ public class ClientController {
     private void interpretMethod(HTTPResponse response) {
         contentPane.setContent(null);
         switch (response.getMethod()) {
-            case "PUT", "DELETE", "COPY", "MOVE", "HELP", "POST" -> {
-                Label label = new Label(new String(response.getBody()));
+            case "PUT":
+            case "DELETE":
+            case "COPY":
+            case "MOVE":
+                HTTPRequester requester = new HTTPRequester("VIEW", getHost(URLField.getText()) + "/", new byte[]{}, logger);
+                interpretResponse(requester.handle());
+            case "HELP":
+            case "POST":
+                Label label = new Label(new String(response.getBody(), StandardCharsets.UTF_8));
                 label.setFont(Font.font("Arial", 18));
                 label.setTextFill(Color.rgb(255, 255, 255));
                 contentPane.setContent(label);
-            }
-            case "GET" -> fillContentPane(response.getContentType(), response.getBody());
-            case "VIEW" -> fillFileBrowser(response.getHost(), response.getPort(), response.getBody());
+                break;
+            case "GET":
+                fillContentPane(response.getContentType(), response.getBody());
+                break;
+            case "VIEW":
+                fillFileBrowser(response.getHost(), response.getPort(), response.getBody());
         }
+    }
+
+    private String getHost(String url) {
+        int indexSlash = url.indexOf("/", "http://".length());
+        return indexSlash == -1 ? url : url.substring(0, indexSlash);
     }
 
     private void fillFileBrowser(String host, int port, byte[] body) {
@@ -442,24 +459,18 @@ public class ClientController {
 
     private void fillContentPane(String type, byte[] content) {
         if (type.contains("image")) {
-            try {
-                Path path = Paths.get("temp." + type.substring(type.indexOf("/") + 1)).toAbsolutePath();
-                Files.write(path, content);
-                ImageView imgView = new ImageView(new Image(path.toString()));
-                contentPane.setContent(imgView);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ImageView imgView = new ImageView(new Image(new ByteArrayInputStream(content)));
+            contentPane.setContent(imgView);
             return;
         }
         if (type.equals("text/html")) {
             WebView web = new WebView();
-            web.getEngine().loadContent(new String(content));
+            web.getEngine().loadContent(new String(content, StandardCharsets.UTF_8));
             contentPane.setContent(web);
             return;
         }
         if (type.contains("text")) {
-            Label label = new Label(new String(content));
+            Label label = new Label(new String(content, StandardCharsets.UTF_8));
             label.setFont(Font.font("Arial", 16));
             label.setTextFill(Color.WHITE);
             contentPane.setContent(label);

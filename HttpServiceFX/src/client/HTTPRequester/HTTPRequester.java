@@ -54,7 +54,6 @@ public class HTTPRequester {
         PrintWriter pw = new PrintWriter(new OutputStreamWriter(outputStream));
         pw.printf("%s %s HTTP/%s%n", method, path, currentVersion);
         pw.printf("Host: %s%n", port == 80 ? host : host + ":" + port);
-        pw.printf("Connection: keep-alive%n");
         pw.printf("Content-Length: " + body.length);
         pw.printf("%n%n");
         pw.flush();
@@ -73,11 +72,9 @@ public class HTTPRequester {
         String contentLength = br.readLine(); // Content-Length
         byte[] body = new byte[Integer.parseInt(contentLength.substring(contentLength.indexOf(":") + 2))];
 
-        int sbxz = br.read();
-        int bc = br.read();
+        br.readLine();
         for(int i = 0; i < body.length; i++) {
-            int s = br.read(); // TODO Первый байт равен -3, а должно быть -119!
-            body[i] = (byte) (0xFF & s);
+            body[i] = (byte) inputStream.read();
         }
 
         return new HTTPResponse(host, port, method, statusCode, statusText, contentType, body);

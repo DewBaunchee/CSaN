@@ -1,10 +1,10 @@
 package server.HttpFileManager;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Enumeration;
 
 public class HTTPServer extends Thread {
 
@@ -66,6 +66,33 @@ public class HTTPServer extends Thread {
     @Override
     public void run() {
         logger.log("Starting server...");
+        try {
+            logger.log("Name: " + InetAddress.getLocalHost().getHostName());
+            logger.log("Port: " + port);
+            byte[] localIP = InetAddress.getLocalHost().getAddress();
+            StringBuilder sb = new StringBuilder("Server-IP:");
+            Enumeration<NetworkInterface> allNI = NetworkInterface.getNetworkInterfaces();
+
+            while(allNI.hasMoreElements())
+            {
+                NetworkInterface ni = allNI.nextElement();
+                Enumeration<InetAddress> addresses = ni.getInetAddresses();
+                while (addresses.hasMoreElements())
+                {
+                    InetAddress ia = addresses.nextElement();
+                    byte[] address = ia.getAddress();
+
+                    if(address[0] == localIP[0] || address[1] ==  localIP[1]) {
+                        sb.append(" ").append(ia.getHostAddress());
+                    }
+                }
+            }
+
+            logger.log(sb.toString());
+        } catch (UnknownHostException | SocketException e) {
+            logger.log(e.getMessage());
+            e.printStackTrace();
+        }
         try {
             server = new ServerSocket(port);
             logger.log("Started. Listening for sockets...");

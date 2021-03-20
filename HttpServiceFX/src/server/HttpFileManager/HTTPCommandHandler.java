@@ -2,6 +2,7 @@ package server.HttpFileManager;
 
 import java.io.*;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,7 +62,7 @@ public class HTTPCommandHandler {
 
         if (httpType == null) {
             sendResponse(out, 415, "Unsupported Media Type",
-                    "text/plain", UNSUPPORTED_MEDIA_TYPE.getBytes());
+                    "text/plain", UNSUPPORTED_MEDIA_TYPE.getBytes(StandardCharsets.UTF_8));
             logger.log("GET handled\n");
             return;
         }
@@ -69,7 +70,7 @@ public class HTTPCommandHandler {
         if (Files.exists(uri) && !Files.isDirectory(uri)) {
             sendResponse(out, 200, "OK", httpType, Files.readAllBytes(uri));
         } else {
-            sendResponse(out, 404, "Not found", "text/plain", NOT_FOUND.getBytes());
+            sendResponse(out, 404, "Not found", "text/plain", NOT_FOUND.getBytes(StandardCharsets.UTF_8));
         }
         logger.log("GET handled\n");
     }
@@ -81,10 +82,10 @@ public class HTTPCommandHandler {
 
         if (Files.exists(uri)) {
             if (Files.isDirectory(uri)) {
-                sendResponse(out, 400, "Bad Request", "text/plain", NOT_FILE_ERROR.getBytes());
+                sendResponse(out, 400, "Bad Request", "text/plain", NOT_FILE_ERROR.getBytes(StandardCharsets.UTF_8));
             } else {
                 sendResponse(out, 200, "OK", "text/plain",
-                        ("File overwritten on the path: " + Files.write(uri, body).toString()).getBytes());
+                        ("File overwritten on the path: " + Files.write(uri, body).toString()).getBytes(StandardCharsets.UTF_8));
             }
         } else {
             boolean isDirectoryRequested = (storage +
@@ -94,11 +95,11 @@ public class HTTPCommandHandler {
             if (isDirectoryRequested) {
                 Files.createDirectory(uri);
                 sendResponse(out, 200, "OK", "text/plain",
-                        ("Directory created on the path: " + uri.toString()).getBytes());
+                        ("Directory created on the path: " + uri.toString()).getBytes(StandardCharsets.UTF_8));
             } else {
                 Files.write(uri, body);
                 sendResponse(out, 200, "OK", "text/plain",
-                        ("File created on the path: " + Files.write(uri, body).toString()).getBytes());
+                        ("File created on the path: " + Files.write(uri, body).toString()).getBytes(StandardCharsets.UTF_8));
             }
         }
 
@@ -128,7 +129,7 @@ public class HTTPCommandHandler {
         if(Files.exists(uri) && !Files.isDirectory(uri)) {
             Files.write(uri, body, StandardOpenOption.APPEND);
         } else {
-            sendResponse(out, 404, "Not Found", "text/plain", NOT_FOUND.getBytes());
+            sendResponse(out, 404, "Not Found", "text/plain", NOT_FOUND.getBytes(StandardCharsets.UTF_8));
         }
 
         logger.log("POST handled\n");
@@ -145,9 +146,9 @@ public class HTTPCommandHandler {
             } else {
                 Files.delete(uri);
             }
-            sendResponse(out, 200, "OK", "text/plain", DELETE_SUCCESS.getBytes());
+            sendResponse(out, 200, "OK", "text/plain", DELETE_SUCCESS.getBytes(StandardCharsets.UTF_8));
         } else {
-            sendResponse(out, 404, "Not found", "text/plain", NOT_FOUND.getBytes());
+            sendResponse(out, 404, "Not found", "text/plain", NOT_FOUND.getBytes(StandardCharsets.UTF_8));
         }
 
         logger.log("DELETE handled\n");
@@ -190,10 +191,10 @@ public class HTTPCommandHandler {
                 Files.copy(src, dest, StandardCopyOption.REPLACE_EXISTING);
             } else {
                 sendResponse(out, 400, "Bad Request", "text/plain",
-                        (NO_SUCH_DIRECTORY + ": " + dest.getParent()).getBytes());
+                        (NO_SUCH_DIRECTORY + ": " + dest.getParent()).getBytes(StandardCharsets.UTF_8));
             }
         } else {
-            sendResponse(out, 404, "Not Found", "text/plain", NOT_FOUND.getBytes());
+            sendResponse(out, 404, "Not Found", "text/plain", NOT_FOUND.getBytes(StandardCharsets.UTF_8));
         }
 
         logger.log("COPY handled\n");
@@ -210,10 +211,10 @@ public class HTTPCommandHandler {
                 Files.move(src, dest, StandardCopyOption.REPLACE_EXISTING);
             } else {
                 sendResponse(out, 400, "Bad Request", "text/plain",
-                        (NO_SUCH_DIRECTORY + ": " + dest.getParent()).getBytes());
+                        (NO_SUCH_DIRECTORY + ": " + dest.getParent()).getBytes(StandardCharsets.UTF_8));
             }
         } else {
-            sendResponse(out, 404, "Not Found", "text/plain", NOT_FOUND.getBytes());
+            sendResponse(out, 404, "Not Found", "text/plain", NOT_FOUND.getBytes(StandardCharsets.UTF_8));
         }
 
         logger.log("MOVE handled\n");
@@ -225,7 +226,7 @@ public class HTTPCommandHandler {
         Path uri = getURI(header);
 
         if (!Files.exists(uri) || !Files.isDirectory(uri)) {
-            sendResponse(out, 400, "Bad Request", "text/plain", VIEW_START_DIR_ERROR.getBytes());
+            sendResponse(out, 400, "Bad Request", "text/plain", VIEW_START_DIR_ERROR.getBytes(StandardCharsets.UTF_8));
             logger.log("VIEW handled\n");
             return;
         }
@@ -236,7 +237,7 @@ public class HTTPCommandHandler {
         ObjectMapper mapper = new ObjectMapper();
         StringWriter jsonList = new StringWriter();
         mapper.writeValue(jsonList, listOfPaths);
-        sendResponse(out, 200, "OK", "application/json", jsonList.toString().getBytes());
+        sendResponse(out, 200, "OK", "application/json", jsonList.toString().getBytes(StandardCharsets.UTF_8));
 
         logger.log("VIEW handled\n");
     }
@@ -296,7 +297,7 @@ public class HTTPCommandHandler {
         }
 
         try {
-            sendResponse(out, statusCode, statusText, "text/plain", sb.toString().getBytes());
+            sendResponse(out, statusCode, statusText, "text/plain", sb.toString().getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -310,6 +311,7 @@ public class HTTPCommandHandler {
         ps.printf("Content-Type: %s%n", type);
         ps.printf("Content-Length: %s%n", length);
         ps.printf("%n");
+        ps.flush();
     }
 
     private void sendResponse(OutputStream out, int statusCode, String statusText, String type, byte[] body) throws IOException {

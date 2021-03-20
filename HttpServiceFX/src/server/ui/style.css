@@ -21,3 +21,7 @@
     -fx-background-insets: 0, 1, 2;
     -fx-background-radius: 0;
 }
+
+.scroll-bar .corner {
+    -fx-background-color: #1D1D1D;
+}

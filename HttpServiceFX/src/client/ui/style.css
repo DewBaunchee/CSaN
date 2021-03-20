@@ -112,6 +112,10 @@
     -fx-background-color: #1D1D1D;
 }
 
+.scroll-bar .arrow {
+    -fx-background-color: #1D1D1D;
+}
+
 .scroll-bar .corner {
     -fx-background-color: #1D1D1D;
 }
@@ -125,7 +129,7 @@
 }
 
 .files-tree-view {
-	-fx-background-color: #333;
+	-fx-background-color: #444;
 	-fx-border: 0;
 }
 
@@ -136,25 +140,14 @@
 
 .files-tree-view .tree-cell:hover {
 	-fx-background-color: #222;
-	-fx-text-fill: #FFF;
 }
 
 .files-tree-view .arrow {
 	-fx-background-color: #AAA;
 }
 
-.files-tree-view .diclosure-node {
-	-fx-padding: 5px;
-}
-
-
 .files-tree-view .tree-cell:hover .arrow {
 	-fx-background-color: #FFF;
-}
-
-
-.files-tree-view .tree-cell:hover .label {
-	-fx-text-fill: #FFF;
 }
 
 .enter-way-hbox {
