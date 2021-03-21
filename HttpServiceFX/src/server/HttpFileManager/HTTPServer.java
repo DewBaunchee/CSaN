@@ -98,6 +98,7 @@ public class HTTPServer extends Thread {
             logger.log("Started. Listening for sockets...");
             while(!isInterrupted()) {
                 Socket socket = server.accept();
+
                 HTTPHandler handler = new HTTPHandler(socket, storage, logger);
                 handler.start();
             }

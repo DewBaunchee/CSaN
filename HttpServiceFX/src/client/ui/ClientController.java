@@ -4,7 +4,6 @@ import client.ClientMain;
 import client.HTTPRequester.HTTPRequester;
 import client.HTTPRequester.HTTPResponse;
 import client.HTTPRequester.MyLogger;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -27,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -202,7 +202,7 @@ public class ClientController {
             if (mouseEvent.getButton() == MouseButton.PRIMARY
                     && mouseEvent.getClickCount() == 2) {
                 TreeItem<AnchorPane> item = filesTreeView.getSelectionModel().getSelectedItem();
-                if(item == null) return;
+                if (item == null) return;
                 if (item.getChildren().size() == 0) {
                     methodChoice.setValue("GET");
                     URLField.setText("http://" + reconstructPath(item));
@@ -259,35 +259,36 @@ public class ClientController {
 
     private void setStatusLabelsColor(int statusCode) {
         switch (statusCode / 100) {
-            case 2 -> {
+            case 2:
                 statusCodeLabel.setTextFill(Color.rgb(0, 255, 0));
                 statusTextLabel.setTextFill(Color.rgb(0, 255, 0));
-            }
-            case 4 -> {
+                break;
+            case 4:
                 statusCodeLabel.setTextFill(Color.rgb(230, 0, 0));
                 statusTextLabel.setTextFill(Color.rgb(230, 0, 0));
-            }
-            case 5 -> {
+                break;
+            case 5:
                 statusCodeLabel.setTextFill(Color.rgb(255, 219, 0));
                 statusTextLabel.setTextFill(Color.rgb(255, 219, 0));
-            }
-            default -> {
+                break;
+            default:
                 statusCodeLabel.setTextFill(Color.rgb(255, 255, 255));
                 statusTextLabel.setTextFill(Color.rgb(255, 255, 255));
-            }
         }
     }
 
-    public static final HashMap<String, String> iconsPaths = new HashMap<>() {{
-        put("folder", "client/ui/icons/folder.png");
-        put("css", "client/ui/icons/css.png");
-        put("txt", "client/ui/icons/txt.png");
-        put("gif", "client/ui/icons/gif.png");
-        put("png", "client/ui/icons/png.png");
-        put("jpg", "client/ui/icons/jpg.png");
-        put("html", "client/ui/icons/html.png");
-        put("file", "client/ui/icons/file.png");
-    }};
+    public static final HashMap<String, String> iconsPaths = new HashMap<>();
+
+    static {
+        iconsPaths.put("folder", "client/ui/icons/folder.png");
+        iconsPaths.put("css", "client/ui/icons/css.png");
+        iconsPaths.put("txt", "client/ui/icons/txt.png");
+        iconsPaths.put("gif", "client/ui/icons/gif.png");
+        iconsPaths.put("png", "client/ui/icons/png.png");
+        iconsPaths.put("jpg", "client/ui/icons/jpg.png");
+        iconsPaths.put("html", "client/ui/icons/html.png");
+        iconsPaths.put("file", "client/ui/icons/file.png");
+    }
 
     public TreeItem<AnchorPane> newTreeViewFile(String name, String extension) {
         AnchorPane pane = new AnchorPane();
@@ -415,14 +416,16 @@ public class ClientController {
     }
 
     private void fillFileBrowser(String host, int port, byte[] body) {
-        ObjectMapper mapper = new ObjectMapper();
-        List<String> paths;
-        try {
-            paths = mapper.readValue(body, List.class);
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.log("Error: " + getClass() + ".fillFileBrowser: " + e.getMessage());
-            return;
+        String listString = new String(body);
+        List<String> paths = new ArrayList<>();
+
+        for(int i = 0; i < listString.length(); i++) {
+            if(listString.charAt(i) == '"') {
+                int j = i + 1;
+                while(listString.charAt(j) != '"') j++;
+                paths.add(listString.substring(i + 1, j));
+                i = j + 1;
+            }
         }
 
         filesTreeView.setRoot(recFill(paths, "/"));

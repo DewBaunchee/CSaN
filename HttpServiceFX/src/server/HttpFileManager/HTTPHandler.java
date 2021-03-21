@@ -24,9 +24,14 @@ public class HTTPHandler extends Thread {
         logger.log("Starting handler for socket: " + socket.toString());
         try (InputStream in = socket.getInputStream(); OutputStream out = socket.getOutputStream()) {
             String header = getRequestHeader(in);
-            int contentLengthIndex = header.indexOf("Content-Length: ") + "Content-Length: ".length();
-            byte[] body = getRequestBody(in,
-                    Integer.parseInt(header.substring(contentLengthIndex, header.indexOf("\n", contentLengthIndex))));
+            byte[] body;
+            if(header.contains("Content-Length: ")) {
+                int contentLengthIndex = header.indexOf("Content-Length: ") + "Content-Length: ".length();
+                body = getRequestBody(in,
+                        Integer.parseInt(header.substring(contentLengthIndex, header.indexOf("\n", contentLengthIndex))));
+            } else {
+                body = new byte[0];
+            }
             handle(header, body, out);
         } catch (IOException | InvocationTargetException | IllegalAccessException e) {
             logger.log(getClass() + ".run: " + e.getMessage());

@@ -235,9 +235,7 @@ public class HTTPCommandHandler {
         fillListOfFiles(storage, uri.toString(), listOfPaths, true);
 
         ObjectMapper mapper = new ObjectMapper();
-        StringWriter jsonList = new StringWriter();
-        mapper.writeValue(jsonList, listOfPaths);
-        sendResponse(out, 200, "OK", "application/json", jsonList.toString().getBytes(StandardCharsets.UTF_8));
+        sendResponse(out, 200, "OK", "application/json", mapper.writeValueAsBytes(listOfPaths));
 
         logger.log("VIEW handled\n");
     }
