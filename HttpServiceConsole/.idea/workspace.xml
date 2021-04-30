@@ -2,37 +2,24 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="42a5c4a4-a75b-4159-b05a-35e44cd47aed" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/_ProgramLog.txt" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/_ProgramLog.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/out/production/HttpServiceFX/client/ui/client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/out/production/HttpServiceFX/client/ui/client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/out/production/HttpServiceFX/server/HttpFileManager/HTTPHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/out/production/HttpServiceFX/server/HttpFileManager/HTTPHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/out/production/HttpServiceFX/server/HttpFileManager/HTTPServer.class" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/out/production/HttpServiceFX/server/HttpFileManager/HTTPServer.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/src/client/HTTPRequester/HTTPRequester.java" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/src/client/HTTPRequester/HTTPRequester.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/src/client/HTTPRequester/HTTPResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/src/client/HTTPRequester/HTTPResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/src/client/ui/ClientController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/src/client/ui/ClientController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/src/client/ui/client.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/src/client/ui/client.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/src/server/HttpFileManager/HTTPHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/src/server/HttpFileManager/HTTPHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/src/server/HttpFileManager/HTTPServer.java" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/src/server/HttpFileManager/HTTPServer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/description.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/project-template.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../Lab3/Lab3.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/compiler.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/description.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/encodings.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/modules.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/uiDesigner.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/.idea/vcs.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/src/sample/Controller.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/src/sample/Main.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/src/sample/sample.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../untitled/untitled.iml" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/client/newGameDialog/NewGameDialog.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/client/newGameDialog/NewGameDialogController.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/client/newGameDialog/NewGameDialogResult.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/client/newGameDialog/newGameDialog.fxml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/CellFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/HiddenCellFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/MarkedCellFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/MinedCellFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/OpenedCellFactory.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/SapperView.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/images/flag.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/sapper/view/images/mine.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/server/ConnectedClient.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/server/Server.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../Lab4/src/server/ServerModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/.idea/.name" beforeDir="false" afterPath="$PROJECT_DIR$/../HttpServiceFX/.idea/.name" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../HttpServiceFX/out/production/HttpServiceFX/server/HttpFileManager/storage/~$lderCopy.txt" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

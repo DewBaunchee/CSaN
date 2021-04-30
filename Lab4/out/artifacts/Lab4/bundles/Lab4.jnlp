@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jnlp spec="1.0" xmlns:jfx="http://javafx.com" href="Lab4.jnlp">
+  <information>
+    <title>Lab4</title>
+    <vendor>Unknown</vendor>
+    <description>Lab4</description>
+    <offline-allowed/>
+  </information>
+  <resources>
+    <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
+    <jar href="Lab4.jar" size="94241" download="eager" />
+  </resources>
+  <jfx:javafx-desc  width="600" height="400" main-class="client.view.SapperEntryPoint"  name="Lab4" />
+  <update check="background"/>
+</jnlp>

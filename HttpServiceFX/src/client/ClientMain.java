@@ -8,13 +8,15 @@ import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+import java.util.Objects;
+
 public class ClientMain extends Application {
 
     public static Parent root;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        root = FXMLLoader.load(getClass().getResource("ui/client.fxml"));
+        root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("ui/client.fxml")));
         primaryStage.setTitle("HTTP File manager server");
         primaryStage.setScene(new Scene(root, 850, 550));
         primaryStage.getIcons().add(new Image("client/ui/icons/mainIcon.png"));
@@ -23,7 +25,6 @@ public class ClientMain extends Application {
         primaryStage.setOnCloseRequest(ClientController.closeEvent);
         primaryStage.show();
     }
-
 
     public static void main(String[] args) {
         launch(args);
