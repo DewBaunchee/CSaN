@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.geometry.Rectangle2D?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="418.0" prefWidth="347.0" styleClass="root-pane" stylesheets="@../style/common.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.vorivoda.matvey.controller.RegistrationFXController">
+    <center>
+        <AnchorPane prefHeight="294.0" prefWidth="283.0">
+            <children>
+                <VBox alignment="TOP_CENTER" layoutX="67.0" layoutY="47.0" prefHeight="294.0" prefWidth="350.0" styleClass="sign-vbox" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <children>
+                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../image/loginMainIcon.png" />
+                            </image>
+                        </ImageView>
+                        <HBox alignment="CENTER_LEFT" styleClass="username-field-pane" stylesheets="@../style/common.css">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <viewport>
+                                        <Rectangle2D />
+                                    </viewport>
+                                    <image>
+                                        <Image url="@../image/usernameFieldIcon25x25.png" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    </HBox.margin>
+                                </ImageView>
+                                <AnchorPane prefHeight="47.0" prefWidth="222.0">
+                                    <children>
+                                        <TextField fx:id="usernameField" prefHeight="38.0" prefWidth="218.0" promptText="Username" styleClass="password-field" stylesheets="@../style/common.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <font>
+                                                <Font name="Comfortaa" size="15.0" />
+                                            </font>
+                                        </TextField>
+                                    </children>
+                                </AnchorPane>
+                            </children>
+                            <VBox.margin>
+                                <Insets top="20.0" />
+                            </VBox.margin>
+                        </HBox>
+                        <HBox alignment="CENTER_LEFT" prefHeight="47.0" prefWidth="267.0" styleClass="password-field-pane" stylesheets="@../style/common.css">
+                            <children>
+                                <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                    <viewport>
+                                        <Rectangle2D />
+                                    </viewport>
+                                    <image>
+                                        <Image url="@../image/passwordFieldIcon25x25.png" />
+                                    </image>
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    </HBox.margin>
+                                </ImageView>
+                                <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                                    <children>
+                                        <PasswordField fx:id="hiddenPasswordField" prefHeight="26.0" prefWidth="0.0" promptText="Password" styleClass="password-field" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <font>
+                                                <Font name="Comfortaa" size="15.0" />
+                                            </font>
+                                        </PasswordField>
+                                        <TextField fx:id="visiblePasswordField" prefHeight="38.0" prefWidth="298.0" promptText="Password" styleClass="password-field" stylesheets="@../style/common.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <font>
+                                                <Font name="Comfortaa" size="15.0" />
+                                            </font>
+                                        </TextField>
+                                    </children>
+                                </AnchorPane>
+                                <AnchorPane prefHeight="40.0" prefWidth="33.0">
+                                    <children>
+                              <ImageView fx:id="openEyeBtn" fitHeight="25.0" fitWidth="25.0" layoutX="10.0" layoutY="10.0" pickOnBounds="true" preserveRatio="true" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <viewport>
+                                    <Rectangle2D />
+                                 </viewport>
+                                 <image>
+                                    <Image url="@../image/openEye25x25.png" />
+                                 </image>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                                        <ImageView fx:id="closeEyeBtn" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                            <viewport>
+                                                <Rectangle2D />
+                                            </viewport>
+                                            <image>
+                                                <Image url="@../image/closeEye25x25.png" />
+                                            </image>
+                                            <cursor>
+                                                <Cursor fx:constant="HAND" />
+                                            </cursor>
+                                        </ImageView>
+                                    </children>
+                                    <HBox.margin>
+                                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                    </HBox.margin>
+                                </AnchorPane>
+                            </children>
+                            <VBox.margin>
+                                <Insets top="10.0" />
+                            </VBox.margin>
+                        </HBox>
+                  <HBox alignment="CENTER_LEFT" prefHeight="47.0" prefWidth="267.0" styleClass="password-field-pane" stylesheets="@../style/common.css">
+                     <children>
+                        <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                           <viewport>
+                              <Rectangle2D />
+                           </viewport>
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                           <children>
+                              <PasswordField fx:id="hiddenConfirmationField" prefHeight="26.0" prefWidth="0.0" promptText="Confirmation" styleClass="password-field" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Comfortaa" size="15.0" />
+                                 </font>
+                              </PasswordField>
+                              <TextField fx:id="visibleConfirmationField" prefHeight="38.0" prefWidth="298.0" promptText="Confirmation" styleClass="password-field" stylesheets="@../style/common.css" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <font>
+                                    <Font name="Comfortaa" size="15.0" />
+                                 </font>
+                              </TextField>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane prefHeight="40.0" prefWidth="33.0">
+                           <children>
+                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                 <viewport>
+                                    <Rectangle2D />
+                                 </viewport>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </ImageView>
+                           </children>
+                           <HBox.margin>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </HBox.margin>
+                        </AnchorPane>
+                     </children>
+                  </HBox>
+                        <HBox alignment="CENTER" prefHeight="57.0" prefWidth="267.0">
+                            <children>
+                                <Button fx:id="signUpBtn" mnemonicParsing="false" prefHeight="51.0" prefWidth="138.0" stylesheets="@../style/common.css" text="Sign up">
+                                    <HBox.margin>
+                                        <Insets />
+                                    </HBox.margin>
+                                    <font>
+                                        <Font name="Comfortaa" size="18.0" />
+                                    </font>
+                                    <cursor>
+                                        <Cursor fx:constant="HAND" />
+                                    </cursor>
+                           <styleClass>
+                              <String fx:value="primary-btn" />
+                              <String fx:value="btn" />
+                           </styleClass>
+                                </Button>
+                        <Button fx:id="signInBtn" mnemonicParsing="false" prefHeight="51.0" prefWidth="138.0" stylesheets="@../style/common.css" text="Sign in">
+                           <font>
+                              <Font name="Comfortaa" size="18.0" />
+                           </font>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <styleClass>
+                              <String fx:value="secondary-btn" />
+                              <String fx:value="btn" />
+                           </styleClass>
+                        </Button>
+                            </children>
+                            <VBox.margin>
+                                <Insets top="10.0" />
+                            </VBox.margin>
+                        </HBox>
+                  <Label fx:id="errorLabel" prefHeight="17.0" prefWidth="407.0" styleClass="error-label" text="Label" textFill="WHITE">
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </Label>
+                    </children>
+                </VBox>
+            </children>
+        </AnchorPane>
+    </center>
+    <top>
+        <HBox fx:id="titleHBox" nodeOrientation="RIGHT_TO_LEFT" prefHeight="32.0" prefWidth="347.0" BorderPane.alignment="CENTER_RIGHT">
+            <children>
+                <AnchorPane fx:id="closeBtn" prefHeight="32.0" prefWidth="42.0" styleClass="close-btn" stylesheets="@../style/common.css">
+                    <cursor>
+                        <Cursor fx:constant="HAND" />
+                    </cursor>
+                </AnchorPane>
+            </children>
+        </HBox>
+    </top>
+</BorderPane>

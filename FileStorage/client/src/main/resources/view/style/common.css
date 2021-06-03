@@ -1,0 +1,63 @@
+* {
+    -fx-font-family: Comfortaa;
+    -fx-text-fill: #FFF;
+}
+
+.root-pane, .pane {
+    -fx-background-color: #222;
+}
+
+.username-field-pane, .password-field-pane {
+    -fx-background-radius: 5;
+    -fx-background-color: #191919;
+    -fx-font-size: 15;
+}
+
+.username-field, .password-field {
+    -fx-background-color: rgba(25, 25, 25, 0);
+    -fx-prompt-text-fill: #BBB;
+    -fx-highlight-fill: #C93636;
+    -fx-font-size: 15;
+}
+
+.primary-btn {
+    -fx-background-color: #C93636;
+    -fx-text-fill: #FFF;
+    -fx-font-size: 18;
+}
+
+.secondary-btn {
+    -fx-background-color: #151515;
+    -fx-font-size: 18;
+}
+
+.primary-btn:hover, .secondary-btn:hover, .btn:hover {
+    -fx-background-color: #FFF;
+    -fx-text-fill: #000;
+    -fx-cursor: hand;
+    -fx-font-size: 18;
+}
+
+.close-btn {
+    -fx-background-color: #C93636;
+}
+
+.close-btn:hover {
+    -fx-background-color: red;
+}
+
+.error-label {
+    -fx-background-color: rgba(209, 54, 54, 0.9);
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.wrong-field {
+    -fx-border-radius: 10;
+    -fx-border-width: 2;
+    -fx-border-color: #C93636;
+}
+
+.sign-vbox {
+    -fx-padding: 50 40 20 40;
+}

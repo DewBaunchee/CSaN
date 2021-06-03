@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TreeView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="515.0" prefWidth="1028.0" styleClass="root-pane" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.vorivoda.matvey.controller.StorageFXController">
+   <center>
+      <SplitPane fx:id="splitPane" dividerPositions="0.29831718510963795, 0.7406935237123916" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <AnchorPane fx:id="structurePane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="pane">
+               <children>
+                  <TreeView fx:id="storageStructure" layoutX="-30.0" layoutY="21.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <stylesheets>
+                        <URL value="@../style/common.css" />
+                        <URL value="@../style/storage.css" />
+                     </stylesheets>
+                     <styleClass>
+                        <String fx:value="pane" />
+                        <String fx:value="tree-view" />
+                     </styleClass></TreeView>
+               </children>
+               <stylesheets>
+                  <URL value="@../style/common.css" />
+                  <URL value="@../style/storage.css" />
+               </stylesheets>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="pane">
+               <children>
+                  <ScrollPane fx:id="folderElementsScrollBar" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <VBox fx:id="folderElements" prefHeight="0.0" prefWidth="0.0" styleClass="pane" />
+                     </content>
+                  </ScrollPane>
+               </children>
+               <stylesheets>
+                  <URL value="@../style/common.css" />
+                  <URL value="@../style/storage.css" />
+               </stylesheets>
+            </AnchorPane>
+            <AnchorPane fx:id="filePreviewPane" minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" styleClass="pane">
+               <stylesheets>
+                  <URL value="@../style/common.css" />
+                  <URL value="@../style/storage.css" />
+               </stylesheets>
+               <children>
+                  <VBox layoutX="76.0" layoutY="121.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <VBox fx:id="fileInfoVBox" prefHeight="200.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding>
+                        </VBox>
+                        <HBox alignment="CENTER" prefHeight="63.0" prefWidth="240.0">
+                           <children>
+                              <Button fx:id="openFileBtn" mnemonicParsing="false" prefHeight="34.0" prefWidth="102.0" styleClass="primary-btn" text="Open">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <HBox.margin>
+                                    <Insets right="10.0" />
+                                 </HBox.margin>
+                              </Button>
+                              <Button fx:id="saveFileBtn" mnemonicParsing="false" prefHeight="34.0" prefWidth="102.0" styleClass="primary-btn" text="Save">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                              </Button>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children></AnchorPane>
+        </items>
+         <stylesheets>
+            <URL value="@../style/common.css" />
+            <URL value="@../style/storage.css" />
+         </stylesheets>
+         <styleClass>
+            <String fx:value="pane" />
+            <String fx:value="split-pane" />
+         </styleClass>
+      </SplitPane>
+   </center>
+   <top>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox maxHeight="32.0" minHeight="32.0" nodeOrientation="RIGHT_TO_LEFT" prefHeight="32.0" prefWidth="930.0" styleClass="title-pane">
+               <children>
+                  <AnchorPane fx:id="closeBtn" prefHeight="32.0" prefWidth="42.0">
+                     <styleClass>
+                        <String fx:value="close-btn" />
+                        <String fx:value="btn" />
+                     </styleClass>
+                  </AnchorPane>
+                  <HBox fx:id="titleHBox" alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="887.0" HBox.hgrow="ALWAYS">
+                     <children>
+                        <ImageView fitHeight="27.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../image/main-icon-box32x32.png" />
+                           </image>
+                           <HBox.margin>
+                              <Insets left="2.0" right="10.0" />
+                           </HBox.margin>
+                        </ImageView>
+                        <MenuBar prefHeight="32.0" prefWidth="290.0" styleClass="main-menu">
+                          <menus>
+                            <Menu mnemonicParsing="false" text="File">
+                              <items>
+                                <MenuItem fx:id="mmOpen" mnemonicParsing="false" text="Open" />
+                                    <MenuItem fx:id="mmSave" mnemonicParsing="false" text="Save" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem fx:id="mmExit" mnemonicParsing="false" text="Exit" />
+                              </items>
+                            </Menu>
+                            <Menu mnemonicParsing="false" text="Edit">
+                              <items>
+                                <MenuItem fx:id="mmCopy" mnemonicParsing="false" text="Copy" />
+                                    <MenuItem fx:id="mmMove" mnemonicParsing="false" text="Move" />
+                                    <MenuItem fx:id="mmPaste" mnemonicParsing="false" text="Paste" />
+                                    <SeparatorMenuItem mnemonicParsing="false" />
+                                    <MenuItem fx:id="mmDelete" mnemonicParsing="false" text="Delete" />
+                              </items>
+                            </Menu>
+                              <Menu mnemonicParsing="false" text="Storage">
+                                 <items>
+                                    <MenuItem fx:id="mmNewFolder" mnemonicParsing="false" text="New folder" />
+                                    <MenuItem fx:id="mmUpload" mnemonicParsing="false" text="Upload" />
+                                    <MenuItem fx:id="mmRefresh" mnemonicParsing="false" text="Refresh" />
+                                    <MenuItem fx:id="mmBack" mnemonicParsing="false" text="Back" />
+                                 </items>
+                              </Menu>
+                              <Menu mnemonicParsing="false" text="View">
+                                 <items>
+                                    <CheckMenuItem fx:id="mmShowStructure" mnemonicParsing="false" text="Show structure" />
+                                    <CheckMenuItem fx:id="mmShowFilePreview" mnemonicParsing="false" text="File preview" />
+                                 </items>
+                              </Menu>
+                            <Menu mnemonicParsing="false" text="Help">
+                              <items>
+                                <MenuItem fx:id="mmAboutProgram" mnemonicParsing="false" text="About program" />
+                                    <MenuItem fx:id="mmAboutAuthor" mnemonicParsing="false" text="About author" />
+                              </items>
+                            </Menu>
+                          </menus>
+                        </MenuBar>
+                     </children>
+                  </HBox>
+               </children>
+               <stylesheets>
+                  <URL value="@../style/common.css" />
+                  <URL value="@../style/storage.css" />
+               </stylesheets>
+            </HBox>
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="930.0" styleClass="tool-bar">
+               <children>
+                  <VBox fx:id="backBtn" alignment="CENTER" prefHeight="38.0" prefWidth="38.0" styleClass="icon-btn">
+                     <HBox.margin>
+                        <Insets />
+                     </HBox.margin>
+                     <children>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="icon-btn">
+                           <image>
+                              <Image url="@../image/arrowBack25x25.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="refreshBtn" alignment="CENTER" prefHeight="38.0" prefWidth="38.0" styleClass="icon-btn">
+                     <children>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="icon-btn">
+                           <image>
+                              <Image url="@../image/refresh25x25.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="uploadBtn" alignment="CENTER" prefHeight="38.0" prefWidth="38.0" styleClass="icon-btn">
+                     <children>
+                        <ImageView fitHeight="24.0" fitWidth="24.0" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" styleClass="icon-btn">
+                           <image>
+                              <Image url="@../image/upload25x25.png" />
+                           </image>
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                        </ImageView>
+                     </children>
+                  </VBox>
+                  <TextField fx:id="currentFolderPath" prefHeight="24.0" prefWidth="567.0" styleClass="path-field" HBox.hgrow="ALWAYS" />
+               </children>
+               <VBox.margin>
+                  <Insets />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </top>
+   <stylesheets>
+      <URL value="@../style/common.css" />
+      <URL value="@../style/storage.css" />
+   </stylesheets>
+</BorderPane>

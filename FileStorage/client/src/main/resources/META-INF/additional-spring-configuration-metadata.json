@@ -1,0 +1,8 @@
+{
+  "properties": [
+    {
+      "name": "maximum.temp.files",
+      "type": "java.lang.Integer",
+      "description": "Description for maximum.temp.files."
+  }
+] }

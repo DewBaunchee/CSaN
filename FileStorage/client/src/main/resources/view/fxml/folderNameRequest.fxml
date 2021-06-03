@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="54.0" prefWidth="600.0" styleClass="modal-pane" stylesheets="@../style/common.css" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="by.vorivoda.matvey.controller.FolderNameRequesterController">
+   <children>
+      <AnchorPane prefHeight="54.0" prefWidth="490.0">
+         <children>
+            <TextField fx:id="folderName" layoutY="96.0" prefHeight="54.0" prefWidth="234.0" promptText="Folder name" style="-fx-text-fill: #000;" styleClass="password-field" stylesheets="@../style/common.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="createBtn" layoutX="-12.0" layoutY="83.0" mnemonicParsing="false" styleClass="primary-btn" stylesheets="@../style/common.css" text="Create" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0">
+         <children>
+            <Button fx:id="cancelBtn" layoutX="14.0" layoutY="126.0" mnemonicParsing="false" styleClass="secondary-btn" stylesheets="@../style/common.css" text="Cancel" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+         </children>
+      </AnchorPane>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</HBox>
