@@ -4,14 +4,12 @@ import java.io.Serializable;
 import java.util.Random;
 
 public class SapperModel implements Serializable {
-    private static final double MAX_BOMB_PROPORTION = 0.8;
-    private Cell[][] _field;
-    private int _bombCount;
-    private int _markCount;
-    private int _hiddenCells;
-    private int _step;
-    private boolean _isWon;
-    private boolean _isLost;
+    private static final double MAX_BOMB_PROPORTION = 0.8; //максимальное количество бомб относительно количества клеток
+    private Cell[][] _field; // Поле
+    private int _bombCount; // Количество бомб
+    private int _markCount; // Количество отмеченных клеток
+    private int _hiddenCells; // Количество ещё не открытых клеток
+    private int _step; // Текущий шаг
 
     public SapperModel(int bombCount, int fieldWidth) {
         if (bombCount < 1) {
@@ -28,7 +26,7 @@ public class SapperModel implements Serializable {
         initField(fieldSize.bombCount, fieldSize.fieldWidth);
     }
 
-    private void initField(int bombCount, int fieldWidth) {
+    private void initField(int bombCount, int fieldWidth) { // Инициализация поля
         _field = new Cell[fieldWidth][fieldWidth];
         for (int i = 0; i < fieldWidth; i++) {
             for (int j = 0; j < fieldWidth; j++) _field[i][j] = new Cell();
@@ -39,7 +37,7 @@ public class SapperModel implements Serializable {
         _markCount = 0;
     }
 
-    private int countBombAround(int row, int col) {
+    private int countBombAround(int row, int col) { // Посчитать количество бомб вокруг клетки
         int count = 0;
 
         for (int i = -1; i < 2; i++) {
@@ -51,15 +49,16 @@ public class SapperModel implements Serializable {
         return count;
     }
 
-    private boolean isCorrectIndexes(int row, int col) {
+    private boolean isCorrectIndexes(int row, int col) { // Проверка индекса
         return row > -1 && row < _field.length
                 && col > -1 && col < _field.length;
     }
 
-    public void setMines(int row, int col) {
+    public void setMines(int row, int col) { // Расстановка мин
         Random random = new Random();
         for (int i = 0; i < _bombCount; i++) {
             int bombRow, bombCol;
+            // Генерация в пустой клетке не ближе, чем за одну клетку до указанной
             do {
                 bombRow = random.nextInt(_field.length);
                 bombCol = random.nextInt(_field.length);
@@ -68,6 +67,7 @@ public class SapperModel implements Serializable {
             _field[bombRow][bombCol].makeMined();
         }
 
+        // Высчитывание для каждой клетки бомб вокруг
         for (int i = 0; i < _field.length; i++) {
             for (int j = 0; j < _field.length; j++) {
                 if (_field[i][j].isMined()) continue;
@@ -76,22 +76,22 @@ public class SapperModel implements Serializable {
         }
     }
 
-    public boolean openCell(int row, int col) {
+    public boolean openCell(int row, int col) { // Открыть клетку
         if(_step == 0) setMines(row, col);
         _step++;
         if (_field[row][col].isMined()) return false;
 
-        recOpen(row, col);
+        recOpen(row, col); // Рекурсивно обходим остальные клетки пока кол-во бомб вокруг равно 0
         return true;
     }
 
     private void recOpen(int row, int col) {
-        if (!isCorrectIndexes(row, col)) return;
-        if (_field[row][col].getState() == CellState.OPENED) return;
+        if (!isCorrectIndexes(row, col)) return; // Проверка
+        if (_field[row][col].getState() == CellState.OPENED) return; // Проверка
 
-        _hiddenCells--;
-        _field[row][col].setState(CellState.OPENED);
-        if (_field[row][col].getBombAround() == 0) {
+        _hiddenCells--; // Декремент количества закрытых клеток
+        _field[row][col].setState(CellState.OPENED); // Открытие
+        if (_field[row][col].getBombAround() == 0) { // Если количество бомб вокруг равно 0, то открыть все клетки вокруг
             for (int i = -1; i < 2; i++) {
                 for (int j = -1; j < 2; j++) {
                     recOpen(row + i, col + j);
@@ -100,7 +100,7 @@ public class SapperModel implements Serializable {
         }
     }
 
-    public boolean toggleMark(int row, int col) {
+    public boolean toggleMark(int row, int col) { // Установка/удаление отметки
         if (_field[row][col].getState() == CellState.MARKED) {
             _field[row][col].setState(CellState.HIDDEN);
             _markCount--;
@@ -126,22 +126,6 @@ public class SapperModel implements Serializable {
         }
     }
 
-    public boolean isWon() {
-        return _isWon;
-    }
-
-    public void setWon(boolean _isWon) {
-        this._isWon = _isWon;
-    }
-
-    public boolean isLost() {
-        return _isLost;
-    }
-
-    public void setLost(boolean _isLost) {
-        this._isLost = _isLost;
-    }
-
     public Cell getCell(int row, int col) {
         return _field[row][col];
     }
@@ -152,10 +136,6 @@ public class SapperModel implements Serializable {
 
     public int getBombCount() {
         return _bombCount;
-    }
-
-    public int getMarkCount() {
-        return _markCount;
     }
 
     public int getHiddenCells() {

@@ -58,6 +58,9 @@ public class SapperController {
             if(server != null && server.isWorking()) {
                 server.shutdown();
             }
+            if(logger != null) {
+                logger.close();
+            }
         };
 
         logger = new MyLogger();
@@ -73,6 +76,7 @@ public class SapperController {
                 if (server != null && server.isWorking()) {
                     server.getModel().setGameZone(new GameZone(model));
                 } else {
+                    if(adminClient != null && adminClient.isConnected()) adminClient.disconnect();
                     new GameZone(model, gameZoneContainer).addPlayer(new SapperUser("Single player"));
                 }
             } catch (IOException e) {

@@ -259,21 +259,22 @@ public class ClientController {
 
     private void setStatusLabelsColor(int statusCode) {
         switch (statusCode / 100) {
-            case 2:
+            case 2 -> {
                 statusCodeLabel.setTextFill(Color.rgb(0, 255, 0));
                 statusTextLabel.setTextFill(Color.rgb(0, 255, 0));
-                break;
-            case 4:
+            }
+            case 4 -> {
                 statusCodeLabel.setTextFill(Color.rgb(230, 0, 0));
                 statusTextLabel.setTextFill(Color.rgb(230, 0, 0));
-                break;
-            case 5:
+            }
+            case 5 -> {
                 statusCodeLabel.setTextFill(Color.rgb(255, 219, 0));
                 statusTextLabel.setTextFill(Color.rgb(255, 219, 0));
-                break;
-            default:
+            }
+            default -> {
                 statusCodeLabel.setTextFill(Color.rgb(255, 255, 255));
                 statusTextLabel.setTextFill(Color.rgb(255, 255, 255));
+            }
         }
     }
 

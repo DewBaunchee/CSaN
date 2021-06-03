@@ -2,7 +2,6 @@ package sapper.view;
 
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.GridPane;
 import sapper.model.Cell;
@@ -13,13 +12,16 @@ import sapper.view.factories.*;
 import java.io.Serializable;
 
 public class SapperView implements Serializable {
-    private SapperModel _sapper;
+    private SapperModel _sapper; // Движок
+    // Фабрики клеток
     private final CellFactory _hiddenCellFactory;
     private final CellFactory _openedCellFactory;
     private final CellFactory _minedCellFactory;
     private final CellFactory _markedCellFactory;
+    // Компонент в который отрисовывается поле
     private GridPane _sapperGrid;
 
+    // События поля
     private SapperViewAction onWinAction;
     private SapperViewAction onLoseAction;
     private SapperViewAction onFirstStepAction;
@@ -43,10 +45,11 @@ public class SapperView implements Serializable {
         reloadGrid();
     }
 
-    private void initGrid() {
+    private void initGrid() { // Инициализация
         _sapperGrid = new GridPane();
         _sapperGrid.setAlignment(Pos.CENTER);
 
+        // Обработчик события нажатия на сетку
         _sapperGrid.setOnMouseClicked(event -> {
             Node node = event.getPickResult().getIntersectedNode();
 
@@ -57,11 +60,11 @@ public class SapperView implements Serializable {
             CellState currentState = _sapper.getCellState(row, col);
             if (event.getButton() == MouseButton.PRIMARY) {
                 if(currentState != CellState.MARKED) {
-                    if (_sapper.getCell(row, col).isMined()) {
+                    if (_sapper.getCell(row, col).isMined()) { // Если нажато на заминированую, то проигрыш
                         lose(row, col);
                     } else if (currentState == CellState.HIDDEN) {
                         openCell(row, col);
-                        if (_sapper.getHiddenCells() == _sapper.getBombCount()) {
+                        if (_sapper.getHiddenCells() == _sapper.getBombCount()) { // Если кол-во спрятанных равно кол-ву бомб, то победа
                             win();
                         }
                     }
@@ -78,39 +81,34 @@ public class SapperView implements Serializable {
 
     public void removeGridOnMouseClick() {
         _sapperGrid.setOnMouseClicked(null);
-    }
+    } // Удаление обработчика нажатия на сетку
 
-    private void reloadGrid() {
-        _sapperGrid.getChildren().clear();
-
-        if(_sapper.isWon()) {
-            _sapperGrid.add(new Label("Won"), 0, 0);
-            return;
-        }
-        if(_sapper.isLost()) {
-            _sapperGrid.add(new Label("Lost"), 0, 0);
-            return;
-        }
+    private void reloadGrid() { // Переотрисовка сетки
+        _sapperGrid.getChildren().clear(); // Очистка
 
         Cell[][] cells = _sapper.getField();
         for (int i = 0; i < cells.length; i++) {
             for (int j = 0; j < cells[i].length; j++) {
-                switch (cells[i][j].getState()) {
-                    case OPENED:
-                        _sapperGrid.add(_openedCellFactory.createCell(cells[i][j].getBombAround()), j, i);
-                        break;
-                    case MARKED:
-                        _sapperGrid.add(_markedCellFactory.createCell(cells[i][j].getBombAround()), j, i);
-                        break;
-                    case HIDDEN:
-                        _sapperGrid.add(_hiddenCellFactory.createCell(cells[i][j].getBombAround()), j, i);
-                        break;
-                }
+                addCell(cells[i][j], i, j); // Добавление клетки в сетку
             }
         }
     }
 
-    public void openCell(int row, int col) {
+    private void addCell(Cell cell, int row, int col) {
+        switch (cell.getState()) {
+            case OPENED:
+                _sapperGrid.add(_openedCellFactory.createCell(cell.getBombAround()), col, row);
+                break;
+            case MARKED:
+                _sapperGrid.add(_markedCellFactory.createCell(cell.getBombAround()), col, row);
+                break;
+            case HIDDEN:
+                _sapperGrid.add(_hiddenCellFactory.createCell(cell.getBombAround()), col, row);
+                break;
+        }
+    }
+
+    public void openCell(int row, int col) { // Открытие клетки
         _sapper.openCell(row, col);
         if(_sapper.getStep() == 1) onFirstStepAction.run(row, col);
 
@@ -118,19 +116,20 @@ public class SapperView implements Serializable {
         onOpenAction.run(row, col);
     }
 
-    public void toggleMark(int row, int col) {
+    public void toggleMark(int row, int col) { // Установка/снятие отметки
         _sapper.toggleMark(row, col);
+
         reloadGrid();
         onMarkToggledAction.run(row, col);
     }
 
-    public void win() {
+    public void win() { // Победа
         reloadGrid();
         _sapperGrid.setOnMouseClicked(null);
         onWinAction.run(0, 0);
     }
 
-    public void lose(int row, int col) {
+    public void lose(int row, int col) { // Проигрыш
         _sapperGrid.setOnMouseClicked(null);
         Cell[][] cells = _sapper.getField();
 
@@ -140,17 +139,7 @@ public class SapperView implements Serializable {
                 if (cells[i][j].isMined()) {
                     _sapperGrid.add(_minedCellFactory.createCell(cells[i][j].getBombAround()), j, i);
                 } else {
-                    switch (cells[i][j].getState()) {
-                        case OPENED:
-                            _sapperGrid.add(_openedCellFactory.createCell(cells[i][j].getBombAround()), j, i);
-                            break;
-                        case MARKED:
-                            _sapperGrid.add(_markedCellFactory.createCell(cells[i][j].getBombAround()), j, i);
-                            break;
-                        case HIDDEN:
-                            _sapperGrid.add(_hiddenCellFactory.createCell(cells[i][j].getBombAround()), j, i);
-                            break;
-                    }
+                    addCell(cells[i][j], i, j);
                 }
             }
         }
@@ -159,40 +148,20 @@ public class SapperView implements Serializable {
         onLoseAction.run(row, col);
     }
 
-    public SapperViewAction getOnFirstStepAction() {
-        return onFirstStepAction;
-    }
-
     public void setOnFirstStepAction(SapperViewAction onFirstStepAction) {
         this.onFirstStepAction = onFirstStepAction;
-    }
-
-    public SapperViewAction getOnWinAction() {
-        return onWinAction;
     }
 
     public void setOnWinAction(SapperViewAction winAction) {
         this.onWinAction = winAction;
     }
 
-    public SapperViewAction getOnLoseAction() {
-        return onLoseAction;
-    }
-
     public void setOnLoseAction(SapperViewAction loseAction) {
         this.onLoseAction = loseAction;
     }
 
-    public SapperViewAction getOnOpenAction() {
-        return onOpenAction;
-    }
-
     public void setOnOpenAction(SapperViewAction onOpenAction) {
         this.onOpenAction = onOpenAction;
-    }
-
-    public SapperViewAction getOnMarkToggledAction() {
-        return onMarkToggledAction;
     }
 
     public void setOnMarkToggledAction(SapperViewAction onMarkToggledAction) {

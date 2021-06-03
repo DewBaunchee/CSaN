@@ -34,9 +34,14 @@ public class MyLogger extends Thread {
         logFile = path;
     }
 
-    public void close() throws IOException {
-        if (bw != null)
-            bw.close();
+    public void close() {
+        if (bw != null) {
+            try {
+                bw.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public void log(String message) {

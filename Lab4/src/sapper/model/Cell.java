@@ -2,10 +2,10 @@ package sapper.model;
 
 import java.io.Serializable;
 
-public class Cell implements Serializable {
-    private CellState _state;
-    private int _bombAround;
-    private boolean _isMined;
+public class Cell implements Serializable { // Клетка поля
+    private CellState _state; // Состояние
+    private int _bombAround; // Кол-во бомб вокруг
+    private boolean _isMined; // Заминирована?
 
     public Cell() {
         _state = CellState.HIDDEN;

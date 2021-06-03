@@ -1,10 +1,7 @@
 package server;
 
 import common.SapperUser;
-import common.messages.clientServerMessage.ClientDisconnectedMessage;
-import common.messages.clientServerMessage.TooMuchPlayersMessage;
-import common.messages.clientServerMessage.WaitForPlayersMessage;
-import common.messages.clientServerMessage.WaitingForNewGameMessage;
+import common.messages.clientServerMessage.*;
 import common.messages.sapperMessage.GameZoneMessage;
 import sapper.view.GameZone;
 import utils.MyLogger;
@@ -19,17 +16,18 @@ import java.util.Enumeration;
 import java.util.List;
 
 public class ServerModel {
+    // Регексп IPv4
     private static final String ipv4 = "\\d{0,3}\\.\\d{0,3}\\.\\d{0,3}\\.\\d{0,3}";
     private final MyLogger _logger;
 
-    private Server _server;
-    private final int _port;
-    private final List<String> _addresses;
+    private Server _server; // Ссылка на сервер
+    private final int _port; // Порт
+    private final List<String> _addresses; // Возможные адреса
 
-    private final List<ConnectedClient> clients;
-    private GameZone _gameZone;
-    private final int _numberOfPlayers;
-    private boolean isWorking;
+    private final List<ConnectedClient> clients; // Подключенные клиенты
+    private GameZone _gameZone; // Игровая зона
+    private final int _numberOfPlayers; // Необходимое кол-во игроком
+    private boolean isWorking; // Сервер запущен?
 
     public ServerModel(int port, int numberOfPlayers, MyLogger logger) throws IOException {
         if (numberOfPlayers < 1 || numberOfPlayers > 4)
@@ -44,8 +42,12 @@ public class ServerModel {
         clients = new ArrayList<>();
     }
 
-    public void shutdown() {
-        while(clients.size() > 0) disconnectClient(clients.get(0));
+    public void shutdown() { // Отключение сервера
+        while (clients.size() > 0) {
+            // Отсылка сообщения и отключение пользователя на стороне сервера
+            clients.get(0).sendMessage(new ServerShutdownMessage(null, "Server is shutting down."));
+            disconnectClient(clients.get(0));
+        }
         isWorking = false;
     }
 
@@ -53,7 +55,7 @@ public class ServerModel {
         isWorking = true;
     }
 
-    public static boolean isPortBusy(int port) {
+    public static boolean isPortBusy(int port) { // Проверка занятости порта
         try (ServerSocket ignored = new ServerSocket(port)) {
             return false;
         } catch (IOException e) {
@@ -62,6 +64,7 @@ public class ServerModel {
     }
 
     public void addClient(ConnectedClient newClient) {
+        // Добавелние нового клиента
         _logger.log("Adding new client");
         if (clients.size() == _numberOfPlayers) {
             _logger.log("Too much players");
@@ -77,6 +80,7 @@ public class ServerModel {
     }
 
     private void checkStatus() {
+        // Проверка статуса сервера: ожидание игроков, ожидание создания игры, отправка игровой зоны
         if (_numberOfPlayers == clients.size()) {
             if (_gameZone != null) {
                 _gameZone.gameStart();
@@ -92,10 +96,11 @@ public class ServerModel {
     }
 
     public void disconnectClient(ConnectedClient client) {
-        _logger.log("Disconnecting client...");
+        // Отключение клиента на стороне сервера
+        _logger.log("Disconnecting " + client.getUser().getUsername() + "...");
         clients.remove(client);
-        if(_gameZone != null)
-        _gameZone.removePlayer(client.getUser());
+        if (_gameZone != null)
+            _gameZone.removePlayer(client.getUser());
         _server.sendToAllMessage(new ClientDisconnectedMessage(client.getUser()));
         client.disconnect();
     }
@@ -131,7 +136,7 @@ public class ServerModel {
         return _logger;
     }
 
-    private ArrayList<String> readAddresses() {
+    private ArrayList<String> readAddresses() { // Получение списка адресов для этого сервер
         try {
             ArrayList<String> addresses = new ArrayList<>();
             Enumeration<NetworkInterface> allNI = NetworkInterface.getNetworkInterfaces();

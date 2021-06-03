@@ -14,20 +14,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class GameZone implements Serializable {
-    private SapperModel _mapConfigure;
-    private boolean _isEnded;
-    private final List<SapperUser> players;
-    private final List<SapperModel> models;
+public class GameZone implements Serializable { // Игровая зона с полями всех игроков
+    private SapperModel _mapConfigure; // Конфигурация поля
+    private boolean _isEnded; // Игра окончена?
+    private List<SapperUser> players; // Список игроков
+    private List<SapperModel> models; // Список полей
 
+    // События
     private GameZoneAction onWinAction;
     private GameZoneAction onLoseAction;
     private GameZoneAction onFirstStepAction;
     private GameZoneAction onOpenAction;
     private GameZoneAction onMarkToggledAction;
 
-    public GameZone(SapperModel mapConfigure) {
-        _mapConfigure = mapConfigure;
+    private void init() { // Инициализация
         players = new ArrayList<>();
         models = new ArrayList<>();
         _isEnded = true;
@@ -44,11 +44,14 @@ public class GameZone implements Serializable {
                 System.out.println(user.getUsername() + " toggled mark in row " + row + " and col " + col + ".");
     }
 
+    public GameZone(SapperModel mapConfigure) {
+        _mapConfigure = mapConfigure;
+        init();
+    }
+
     public GameZone(SapperModel mapConfigure, AnchorPane container) {
         _mapConfigure = mapConfigure;
-        players = new ArrayList<>();
-        models = new ArrayList<>();
-        _isEnded = true;
+        init();
 
         Platform.runLater(() -> {
             container.getChildren().clear();
@@ -56,32 +59,26 @@ public class GameZone implements Serializable {
         });
     }
 
-    public void setMapConfigure(SapperModel mapConfigure) {
-        _mapConfigure = mapConfigure;
-    }
-
-    public SapperModel getMapConfigure() {
-        return _mapConfigure;
-    }
-
-    public void addPlayer(SapperUser user) {
+    public void addPlayer(SapperUser user) { // Добавление игрока
         if(!players.contains(user)) {
             players.add(user);
             models.add(new SapperModel(_mapConfigure.getBombCount(), _mapConfigure.getField().length));
         }
     }
 
-    public void removePlayer(SapperUser user) {
+    public void removePlayer(SapperUser user) { // Удаление игрока
         int index = 0;
         for(SapperUser current : players) {
             if(current.equals(user)) break;
             index++;
         }
+        if(index == players.size()) return;
         players.remove(index);
         models.remove(index);
     }
 
     public GridPane setParent(SapperUser userOwner, HashMap<SapperUser, SapperView> sapperViews) {
+        // Отрисовка полей на переданном компоненте
         GridPane sappers = new GridPane();
         sappers.setAlignment(Pos.CENTER);
         AnchorPane.setTopAnchor(sappers, 0.0);
@@ -95,6 +92,7 @@ public class GameZone implements Serializable {
             SapperModel model = models.get(i);
             SapperView view = new SapperView(model);
 
+            // Если текущим полем владеет клиент, то назначить обработчики, иначе запретить нажатие
             if(userOwner == null || userOwner.equals(sapperUser)) {
                 view.getSapperGrid().setStyle("-fx-border-color: red; -fx-border-width: 2px");
                 view.setOnWinAction((row, col) -> onWinAction.run(sapperUser, row, col));
@@ -106,20 +104,23 @@ public class GameZone implements Serializable {
                 view.removeGridOnMouseClick();
             }
 
+            // Расчёт позиции
             int row = (int) Math.floor((double) i / 2);
             int col = i % 2;
 
+            // Отрисовка
             VBox usernameAndSapperGrid = new VBox();
             usernameAndSapperGrid.getChildren().add(new Label("Player: " + sapperUser.getUsername()));
             usernameAndSapperGrid.getChildren().add(view.getSapperGrid());
             sappers.add(usernameAndSapperGrid, col, row);
+            // Сохранение
             sapperViews.put(sapperUser, view);
         }
 
         return sappers;
     }
 
-    public GameZone copy() {
+    public GameZone copy() { // Скопировать игровую зону
         GameZone gameZone = new GameZone(new SapperModel(_mapConfigure.getBombCount(), _mapConfigure.getField().length));
         for(int i = 0; i < players.size(); i++) {
             gameZone.players.add(players.get(i));
